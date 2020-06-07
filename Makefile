@@ -10,7 +10,7 @@ EXT=".out"
 
 all: ensure_build_dir algs
 
-algs: ${KARGER_MIN_CUT}
+algs: ${KARGER_MIN_CUT} ${KARGER_STEIN_MIN_CUT}
 
 ${KARGER_MIN_CUT}:
 	${CXX} ${CXXFLAGS} "${KARGER_MIN_CUT}/${MAINFILE}" -o "${OUT_DIR}/${KARGER_MIN_CUT}${EXT}"
