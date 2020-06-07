@@ -1,0 +1,19 @@
+\section{Abstract}
+\label{cap:abstract}
+
+Questo terzo homework di laboratorio di Algoritmi Avanzati ha lo scopo di implementare e valutare l'algoritmo randomizzato di Karger per il problema del minimum cut di un grafo. I grafi considerati sono connessi, non pesati, non diretti e privi di \textit{self-loop}. \\
+
+\noindent I parametri da considerare sono:
+
+\begin{enumerate}
+    \item Il tempo impiegato dalla procedura \codeinline{full\_contraction};
+    \item Il tempo impiegato dall'algoritmo completo per ripetere la contrazione un numero sufficientemente alto di volte;
+    \item Il \textit{discovery time}, ovvero il tempo necessario all'algoritmo ad individuare il taglio di costo minimo la prima volta;
+    \item L'errore nella soluzione trovata rispetto al risultato ottimo.
+\end{enumerate}
+
+\noindent Abbiamo considerato anche alcuni contributi originali rispetto agli algoritmi visti in classe; esse sono discussi e presentati nella sezione \hyperref[cap:extensions-and-originalities]{Estensioni e originalità}. \\
+
+\noindent Il codice è scritto in C++17 ed è opportunamente commentato per facilitarne la comprensione. Non è stata usata alcuna libreria esterna.
+
+\noindent Le risposte alle 4 domande principali dell'homework sono riportate nella sezione \hyperref[cap:performance-analysis]{Analisi dei risultati}.

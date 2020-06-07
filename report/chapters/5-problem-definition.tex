@@ -1,0 +1,29 @@
+\section{Definizione del problema minimum-cut}
+\label{cap:problem-definition}
+
+Sia $ G = (V,E) $ un grafo non diretto con $ n $ vertici e $ m $ lati. Siamo interessati alla nozione di \textit{taglio} di un grafo.
+
+\begin{defn}
+Un \textbf{taglio} (cut) in $ G $ è un partizionamento dei vertici $ V $ in 2 insiemi, $ S $ and $ T $, $ T=V(G) \setminus S$, dove gli archi di un taglio sono $(S, T) = \{ uv \shortmid u \in S, v \in T, S \cap T = V, uv \in E \}$,
+dove $ S \neq \emptyset $ e $ T \neq \emptyset $. Il numero di archi nel taglio $ (S,T) $ è noto come \textit{dimensione} del taglio.
+\end{defn}
+
+\noindent Siamo interessati nel problema del calcolo del \textit{minimum cut}, ovvero il taglio di cardinalità minima nel grafo.
+Formalmente, vogliamo trovare $ S\subseteq V $ tale che $ (S, T) $ sia minimo, $ S \neq \varnothing $ e $ S \neq T $.
+Nella letteratura, il problema è formalizzato in due modi:
+
+\begin{itemize}
+    \item nel \textit{s-t min-cut problem}, due vertici particolari $s$ e $t$ sono richiesti essere nelle due parti opposte del taglio;
+    \item nel \textit{global min-cut problem}, non si fa riferimento ad alcun vertice specifico.
+\end{itemize}
+
+\noindent In questo homework tratteremo solo del \textit{global min-cut problem}. \\
+\noindent Questo problema ha numerose applicazioni, ad esempio:
+
+\begin{itemize}
+    \item determinare la solidità del design di una rete di calcolatori;
+    \item nell'ambito dell'Information Retrieval, identificare cluster di documenti correlati da certi topic in comune;
+    \item nella progettazione di compilatori per linguaggi paralleli;
+    \item nell'ottimizzazione combinatoria su larga scala;
+    \item e molte altre applicazioni \ldots
+\end{itemize}

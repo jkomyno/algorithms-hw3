@@ -1,0 +1,150 @@
+\section{Algoritmo di Karger}
+\label{cap:algorithm-karger}
+
+\subsection{Definizione}
+\label{sub:karger-definition}
+
+\textbf{KargerMinCut} è l'implementazione dell'algoritmo randomizzato per la risoluzione del problema minimum-cut visto a lezione. L'algoritmo è di tipo \textit{Monte Carlo} e prevede i seguenti step:
+
+\begin{enumerate}
+    \item \textbf{Step 1}: La variabile \codeinline{min\_cut} viene inizializzata a $+\infty$;
+    \item \textbf{Step 2}: Per $k$ iterazioni, viene eseguita la funzione \codeinline{full\_contraction};
+    \item \textbf{Step 3}: Se il numero di lati del grafo ritornato da \codeinline{full\_contraction} è minore di \codeinline{min\_cut}, allora \codeinline{min\_cut} viene aggiornato a tale valore;
+    \item \textbf{Step 4}: L'operazione viene ripetuta finché il grafo contiene solo 2 nodi.
+\end{enumerate}
+
+La funzione \codeinline{full\_contraction} prende in input un grafo connesso, non diretto, non pesato, ed è definita come segue:
+
+\begin{enumerate}
+    \item \textbf{Step a}: Viene creata una copia del grafo di input;
+    \item \textbf{Step b}: Fino a che il grafo non contiene solo 2 nodi, viene scelto un lato $(u, v)$ a caso;
+    \item \textbf{Step c}: I due nodi relativi $u$ e $v$ vengono contratti, eliminando tutti i lati incidenti su entrambi;
+    \item \textbf{Step e}: Viene ritornato il grafo contratto.
+\end{enumerate}
+
+\noindent Il listato \ref{listing:karger} contiene la nostra implementazione dell'algoritmo, step per step. Per facilitare la lettura, in questo listato abbiamo rimosso il codice necessario a tracciare i tempi di esecuzione della funzione \codeinline{full\_contraction}.\\
+
+\begin{listing}[!ht]
+\begin{minted}{c++}
+// Shared/full_contraction.h
+auto full_contraction(const std::shared_ptr<AdjacencyMapGraph>& graph) noexcept {
+  // Step a
+  auto graph_copy = std::make_unique<AdjacencyMapGraph>(*graph.get());
+
+  while (graph_copy->size() > 2) {
+    // Step b
+    const auto [u, v] = graph_copy->get_random_edge();
+    
+    // Step c
+    graph_copy->contract(u, v);
+  }
+  
+  // Step e
+  return graph_copy;
+}
+
+// KargerMinCut/karger.h
+size_t karger(const std::shared_ptr<AdjacencyMapGraph>& graph, size_t k) noexcept {
+  // Step 1
+  size_t min_cut = std::numeric_limits<size_t>::max();
+  
+  for (size_t i = 0; i < k; ++i) {
+    // Step 2
+    const auto contracted_graph = full_contraction(graph);
+    const size_t cut = contracted_graph->edge_size();
+    
+    // Step 3
+    min_cut = std::min(min_cut, cut);
+  }
+  
+  // Step 4
+  return min_cut
+}
+\end{minted}
+\caption{Implementazione dell'algoritmo di Karger.}
+\label{listing:karger}
+\end{listing}
+
+\noindent L'algoritmo di Karger è stato implementato a partire dallo pseudocodice visto in classe. \\
+
+\subsubsection{Osservazioni}
+
+\begin{itemize}
+    \item La funzione \codeinline{full\_contraction} è definita nella cartella \codeinline{Shared} perché la sua implementazione è riutilizzata anche dell'algoritmo di Karger \& Stein.
+    \item 
+\end{itemize}
+
+\subsection{Contrazione del grafo}
+\label{sub:karger-contraction}
+
+L'idea alla base dell'algoritmo di Karger è la contrazione di un lato.
+
+\begin{defn}
+In un grafo $ G $, la \textbf{contrazione} di un lato $e$ con estremi $u, v$ è la sostituzione di $ u $ e $ v $ con un unico vertice i cui lati incidenti sono i lati diversi da $ e $ che erano incidenti nei vertici $ u $ o $ v $.
+Il multigrafo risultante, denotato come $G' = G/e$, ha un vertice in meno rispetto a $G$. Il numero di lati diminuisce di un fattore pari alla molteplicità del lato contratto.
+\end{defn}
+
+\noindent Si veda ad esempio la figura \ref{fig:contraction-example}.
+
+\begin{figure}[h]
+     \centering
+     \begin{subfigure}[b]{0.3\textwidth}
+             \centering
+             \includegraphics[width=\textwidth]{./images/contract-original-graph.png}
+             \caption{Contrazione dell'arco $(x, y)$}
+             \label{fig:original-graph}
+     \end{subfigure}
+   	\hfill
+     \begin{subfigure}[b]{0.3\textwidth}
+             \centering
+             \includegraphics[width=\textwidth]{./images/contract-xy.png}
+             \caption{Fusione in un vertice}
+             \label{fig:contract-xy}
+     \end{subfigure}
+    \hfill
+     \begin{subfigure}[b]{0.3\textwidth}
+             \centering
+             \includegraphics[width=\textwidth]{./images/after-contraction.png}
+             \caption{Dopo la contrazione}
+             \label{fig:after-contraction}
+     \end{subfigure}
+     \caption{Esempio di contrazione}
+     \label{fig:contraction-example}
+\end{figure}
+
+\begin{listing}[!ht]
+\begin{minted}{c++}
+// Shared/AdjacencyMapGraph.h
+TODO: describe the function in a paragraph, remove the comments
+inline void AdjacencyMapGraph::contract(size_t contracted, size_t incorporator) {
+    // delete every arc between contracted and incorporator.
+    // One is the selected arc, the other ones would become self-loops, so we get rid of them.
+    edge_count_map.erase({contracted, incorporator});
+    adj_map[incorporator].erase(contracted);
+    adj_map[contracted].erase(incorporator);
+
+    // transfer every edge incident in contracted to incorporator.
+    // Note that incorporator won't appear in contracted's adjacent nodes.
+    for (const auto node : adj_map.at(contracted)) {
+        // replace every arc (contracted, node) with a new (incorporator, node)
+        adj_map[node].erase(contracted);
+        adj_map[node].insert(incorporator);
+        adj_map[incorporator].insert(node);
+
+        const size_t n_multi_edge = edge_count_map.at({contracted, node});
+        edge_count_map.erase({contracted, node});
+        edge_count_map[{incorporator, node}] += n_multi_edge;
+    }
+
+    // delete contracted node
+    adj_map.erase(contracted);
+\end{minted}
+\caption{Implementazione della contrazione del grafo.}
+\label{listing:adjacency-map-graph-contract}
+\end{listing}
+
+\subsection{Analisi probabilistica}
+\label{sub:karger-success-probability}
+
+\subsection{Successo con alta probabilità}
+\label{sub:karger-success-whp}

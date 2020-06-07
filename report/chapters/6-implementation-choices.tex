@@ -1,0 +1,148 @@
+\section{Scelte implementative}
+\label{cap:implementation-choices}
+
+\subsection{Rappresentazione del grafo}
+\label{sub:graph-representation}
+
+Gli algoritmi di questo homework operano su grafi non pesati, connessi e non diretti.
+
+% \noindent Come nel precedente homework, per semplificare la logica di indicizzazione dei nodi del grafo, la label dei nodi (originariamente numerata da $1$ a $n$) è decrementata di 1, quindi i nodi sono rappresentati dall'intervallo numerico $[0, n-1]$.
+
+\noindent La classe che rappresenta la Mappa di Adiacenza dei grafi è definita in \codeinline{AdjacencyMapGraph.h} nella cartella \textit{Shared}.
+
+\begin{listing}[!ht]
+\begin{minted}{c++}
+int main(int argc, char** argv) {
+    if (argc != 2) {
+        std::cerr << "1 argument required: filename" << std::endl;
+        exit(1);
+    }
+
+    const char* filename = argv[1];
+
+    // inizia a misurare il tempo di esecuzione
+    const auto program_time_start = stopwatch::now();
+
+    // legge il grafo completo non diretto dal file di input
+    auto graph = read_file(filename);
+
+    // numero di iterazioni richieste stimato
+    const size_t k = // ...
+    std::cout << "k: "s << k << '\n';
+
+    // calcola il min-cut approssimato
+    const auto min_cut = // ...
+    
+    // ferma l'orologio
+    auto program_time_stop = stopwatch::now();
+
+    // calcola il tempo totale di esecuzione
+    const auto program_time =
+        stopwatch::duration<stopwatch::us_t>(program_time_start, program_time_stop);
+
+    // stampa la soluzione e le statistiche di esecuzione
+    std::cout << "min_cut: "s << min_cut << std::endl;
+    std::cout << "program_time: "s << program_time << std::endl;
+}
+\end{minted}
+\caption{Scheletro comune ad ogni file \codeinline{main.cpp} del progetto.}
+\label{listing:main-cpp}
+\end{listing}
+
+\subsection{Lettura del Grafo}
+
+\noindent Il file \codeinline{main.cpp} ha la stessa struttura per ogni algoritmo, si veda il listing \ref{listing:main-cpp}.
+Ci aspettiamo in input file rappresentati come liste di adiacenza, dove, per ogni riga:
+
+\begin{itemize}
+    \item la prima colonna indica la label del vertice $u$;
+    \item gli elementi successivi formano la lista di tutti i vertici incidenti a $u$, cioè i $v$ tali che \\ $\exists$ $(u, v) \in E$.
+\end{itemize}
+
+Ad alto livello, le operazioni svolte sono:
+
+\begin{enumerate}
+    \item Lettura del file di input: il file di input viene processato da \codeinline{read\_file.h}. Viene letta una riga per volta in un buffer, e il primo elemento di tale buffer è usato per etichettare il nodo della lista di adiacenza letta.
+
+    \noindent Abbiamo usato la libreria di file streaming nativa di C++ (\codeinline{fstream}).
+
+    \item Una volta letti i nodi, viene creata la Mappa di Adiancenza nella memoria heap, e ne viene ritornato uno \textit{smart-pointer} di tipo \mintinline{c++}{std::shared_ptr}.
+\end{enumerate}
+
+\noindent Tutti i file citati qui sopra sono nella cartella \textit{Shared} del progetto consegnato e sono corredati di ulteriori commenti esplicativi.
+
+%\subsection{Strutture Dati comuni}
+
+%Tutte le strutture dati elencate di seguito sono definite nella cartella \textit{Shared}.
+%Ove possibile, per la nomenclatura dei metodi abbiamo cercato di seguire lo stesso standard dei container STL di C++.
+%Inoltre, le strutture dati usate sono sempre pre-allocate in memoria quando possibile, evitando rehashing e riallocazioni dispendiose. Questo significa che la maggior parte delle operazioni indicate con \complexityConstant{} ammortizzato siano in realtà totalmente costanti nella pratica. \\
+
+\subsection{Misurazione del tempo di esecuzione}
+\label{sub:stopwatch}
+
+\noindent \codeinline{C++17} non fornisce soluzione \textit{out-of-the-box} ad alto livello per registrare il tempo di esecuzione di singoli metodi o blocchi di codice. Abbiamo quindi implementato una funzione \codeinline{decorator} che astrae il compito di misurare i tempi di esecuzione di una funzione. \\
+
+\noindent \codeinline{Shared/stopwatch\_decorator.h} definisce la funzione generica \codeinline{decorator}, che:
+
+\begin{itemize}
+    \item riceve in input la funzione \codeinline{func} da eseguire e misurare;
+    \item ritorna un'altra funzione che riceve in input i parametri variadici \codeinline{args} della funzione \codeinline{func};
+    \item all'interno della funzione ritornata, viene avviato un cronometro;
+    \item viene eseguita la funzione e ne viene catturato il risultato in una variabile contenitore;
+    \item viene interrotto il cronometro e salvato il tempo di esecuzione;
+    \item viene ritornato il risultato della funzione corredato del tempo di esecuzione. Ci sono due possibilità:
+    \begin{enumerate}
+        \item se \codeinline{func(args...)} ritorna una tupla (\mintinline{c++}{std::tuple<...>}), il tempo di esecuzione è appeso in coda al risultato della funzione;
+        \item se invece \codeinline{func(args)...} ritorna un qualsiasi altro tipo, viene creata una nuova tupla contenente il risultato della funzione e il tempo di esecuzione.
+    \end{enumerate}
+\end{itemize}
+
+Si veda il listing \ref{listings:stopwatch-decorator} per un estratto della funzione \codeinline{decorator}.
+Si veda invece il listing \ref{listings:stopwatch-decorator-usage} per un'esempio di utilizzo di tale funzione.
+
+\begin{listing}[!ht]
+\begin{minted}{c++}
+template <typename TimeDuration, typename F>
+auto decorator(F&& func) {
+  return [func = std::forward<F>(func)](auto&&... args) {
+    auto start_time = stopwatch::now();
+    
+    // la funzione viene eseguita e il risultato è salvato
+    using result_t = std::invoke_result_t<F, decltype(args)...>;
+    detail::return_wrapper<result_t> result(func,
+                                            std::forward<decltype(args)>(args)...);
+
+    const auto stop_time = stopwatch::now();
+    const auto func_duration = stopwatch::duration<TimeDuration>(start_time,
+                                                                 stop_time);
+
+    // a prescindere dal tipo di ritorno generico della funzione, viene ritornata
+    // una tupla non annidata
+    if constexpr (detail::is_tuple<result_t>::value) {
+      return std::tuple_cat(result.value(), std::tie(func_duration));
+    } else {
+      return std::make_tuple(result.value(), func_duration);
+    }
+  };
+}
+\end{minted}
+\caption{Estratto della funzione \codeinline{decorator} per rilevare i tempi di esecuzione di una funzione.}
+\label{listings:stopwatch-decorator}
+\end{listing}
+
+
+\begin{listing}[!ht]
+\begin{minted}{c++}
+auto graph = // ...
+const size_t k = // ...
+const auto program_time_start = // ...
+
+// min_cut e discovery_time sono risultati della funzione karger
+// karger_duration è il tempo di esecuzione della funzione in microsecondi
+const auto [min_cut, discovery_time, karger_duration] =
+    stopwatch::decorator<stopwatch::us_t>(karger)(graph, k, program_time_start);
+
+\end{minted}
+\caption{Esempio di utilizzo della funzione \codeinline{decorator} per rilevare i tempi di esecuzione di una funzione.}
+\label{listings:stopwatch-decorator-usage}
+\end{listing}
