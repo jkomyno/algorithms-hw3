@@ -18,9 +18,6 @@
  * Helper that reads a connected graph from a text file.
  * We assume that the nodes are labeled with a label x,
  * where 1 <= x <= n (n is the number of nodes).
- * The nodes are going to be saved into the adjacency map
- * class AdjacencyMapGraph with their label decremented by 1
- * (thus 0 <= x' <= n-1).
  * Creating a graph representation from an input file takes O(m * (n + m)) time.
  */
 inline std::shared_ptr<AdjacencyMapGraph> read_file(const char* filename) {
