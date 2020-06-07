@@ -27,6 +27,8 @@ int main(int argc, char** argv) {
     // number of iterations required by Karger's algorithm to find the min-cut with probability 1/n
     const size_t k = utils::estimate_iterations_karger(graph->size());
 
+    std::cout << "k: "s << k << '\n';
+
     const auto [min_cut, discovery_time, karger_duration] =
         stopwatch::decorator<stopwatch::us_t>(karger)(graph, k, program_time_start);
 
@@ -38,7 +40,6 @@ int main(int argc, char** argv) {
         stopwatch::duration<stopwatch::us_t>(program_time_start, program_time_stop);
 
     std::cout << "min_cut: "s << min_cut << std::endl;
-    std::cout << "k: "s << k << std::endl;
     std::cout << "program_time: "s << program_time << std::endl;
     std::cout << "discovery_time: "s << discovery_time << std::endl;
 }
