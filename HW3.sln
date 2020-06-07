@@ -9,7 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{5AB057
 	ProjectSection(SolutionItems) = preProject
 		Shared\AdjacencyMapGraph.h = Shared\AdjacencyMapGraph.h
 		Shared\Edge.h = Shared\Edge.h
-		Shared\EdgeListGraph.h = Shared\EdgeListGraph.h
 		Shared\full_contraction.h = Shared\full_contraction.h
 		Shared\random_generator.h = Shared\random_generator.h
 		Shared\read_file.h = Shared\read_file.h
