@@ -37,11 +37,12 @@ if __name__ == '__main__':
     program_time_raw = next(lines)
     program_time = parse('program_time: {}', program_time_raw)[0]
 
-    discovery_time_raw = next(lines)
-    discovery_time = parse('discovery_time: {}', discovery_time_raw)[0]
-
-    csv_line = f'{filename};{expected_min_cut};{nodes};{k};{min_cut};{program_time};{discovery_time}'
     if measure_full_contraction:
-        csv_line = f'{csv_line};{full_contraction_mean}'
+        discovery_time_raw = next(lines)
+        discovery_time = parse('discovery_time: {}', discovery_time_raw)[0]
+
+    csv_line = f'{filename};{nodes};{k};{expected_min_cut};{min_cut};{program_time}'
+    if measure_full_contraction:
+        csv_line = f'{csv_line};{discovery_time};{full_contraction_mean}'
 
     print(csv_line)

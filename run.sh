@@ -5,16 +5,14 @@ set -eu
 # Usage: ./run.sh [program-name] [measure-full-contraction (0/1)] > output.csv
 # Note: this file needs the LF line endings.
 
-# program=$1
-# measure_full_contraction=$2
-program="./x64/Release/KargerMinCut.exe"
-measure_full_contraction="1"
+program=$1
+measure_full_contraction=$2
 dataset="dataset"
 
-header="filename;expected_min_cut;nodes;k;min_cut;program_time;discovery_time"
+header="filename;nodes;k;expected_min_cut;min_cut;program_time"
 
 if [ $measure_full_contraction -eq "1" ]; then
-    header="${header};full_contraction"
+    header="${header};discovery_time;full_contraction"
 fi
 
 echo $header
