@@ -58,7 +58,7 @@ namespace stopwatch {
             detail::return_wrapper<result_t> result(func, std::forward<decltype(args)>(args)...);
 
             // stop the stopwatch
-            auto stop_time = stopwatch::now();
+            const auto stop_time = stopwatch::now();
 
             // execution time expressed in TimeDuration
             const auto func_duration = stopwatch::duration<TimeDuration>(start_time, stop_time);
