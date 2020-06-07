@@ -140,7 +140,7 @@ inline size_t AdjacencyMapGraph::edge_size() const noexcept {
                    });
 
     // return the sum of the values
-    return std::accumulate(values.cbegin(), values.cend(), 0);
+    return std::accumulate(values.cbegin(), values.cend(), size_t(0));
 }
 
 inline std::vector<size_t> AdjacencyMapGraph::get_vertexes() const noexcept {
