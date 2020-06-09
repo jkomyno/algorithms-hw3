@@ -16,7 +16,7 @@
  * Time: O(n^4 * log(n))
  * Space: O(n + m)
  */
-[[nodiscard]] auto karger(timeout::timeout_signal& signal,
+[[nodiscard]] auto karger(timeout::timeout_signal&& signal,
                           const std::shared_ptr<AdjacencyMapGraph>& graph, size_t k,
                           const stopwatch::time_point_t program_time_start) noexcept {
     // keep track of the min-cut discovery time
@@ -51,5 +51,6 @@
     const auto discovery_time =
         stopwatch::duration<stopwatch::us_t>(program_time_start, discovery_time_stop);
 
-    return std::make_tuple(min_cut, discovery_time);
+    // return min_cut;
+    return std::make_pair(min_cut, discovery_time);
 }

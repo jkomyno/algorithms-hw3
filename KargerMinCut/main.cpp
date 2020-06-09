@@ -7,7 +7,6 @@
 #include "stopwatch_decorator.h"
 #include "timeout.h"
 
-
 int main(int argc, char** argv) {
     using namespace std::string_literals;
 
@@ -31,14 +30,14 @@ int main(int argc, char** argv) {
 
     std::cout << "k: "s << k << '\n';
 
-        // the timeout is set to 2 minutes
+    // the timeout is set to 2 minutes
     auto timeout_min = 2min;
 
-    const auto [min_cut, discovery_time, karger_duration] = timeout::with_timeout(
-        &timeout_min, &stopwatch::decorator<stopwatch::us_t>(karger), &graph, &k, &program_time_start);
+    const auto [karger_result, karger_duration] =
+        timeout::with_timeout(std::move(timeout_min), stopwatch::decorator<stopwatch::us_t>(karger),
+                          std::ref(graph), k, program_time_start);
 
-   
-    //stopwatch::decorator<stopwatch::us_t>(karger)(graph, k, program_time_start);
+    const auto& [min_cut, discovery_time] = karger_result;
 
     // stop the stopwatch
     auto program_time_stop = stopwatch::now();
