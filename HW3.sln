@@ -15,6 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{5AB057
 		Shared\shared_utils.h = Shared\shared_utils.h
 		Shared\stopwatch.h = Shared\stopwatch.h
 		Shared\stopwatch_decorator.h = Shared\stopwatch_decorator.h
+		Shared\timeout.h = Shared\timeout.h
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KargerSteinMinCut", "KargerSteinMinCut\KargerSteinMinCut.vcxproj", "{8DA0F624-4588-4226-8A15-32674C1B39FA}"
