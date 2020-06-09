@@ -20,8 +20,8 @@ else
 fi
 
 run_script="run.sh"
-algorithms="KargerMinCut KargerSteinMinCut"
-full_contractions=(1 0)
+algorithms="KargerMinCut KargerSteinMinCut KargerMinCutTimeout"
+full_contractions=(1 0 1)
 
 mkdir -p "benchmark"
 

@@ -3,6 +3,7 @@ CXXFLAGS=-O3 -Wall -Wextra -std=c++17 -I Shared -Wno-return-type
 MAINFILE=main.cpp
 
 KARGER_MIN_CUT=KargerMinCut
+KARGER_MIN_CUT_TIMEOUT=KargerMinCutTimeout
 KARGER_STEIN_MIN_CUT=KargerSteinMinCut
 
 OUT_DIR="."
@@ -10,10 +11,13 @@ EXT=".out"
 
 all: ensure_build_dir algs
 
-algs: ${KARGER_MIN_CUT} ${KARGER_STEIN_MIN_CUT}
+algs: ${KARGER_MIN_CUT}  ${KARGER_MIN_CUT_TIMEOUT} ${KARGER_STEIN_MIN_CUT}
 
 ${KARGER_MIN_CUT}:
 	${CXX} ${CXXFLAGS} "${KARGER_MIN_CUT}/${MAINFILE}" -o "${OUT_DIR}/${KARGER_MIN_CUT}${EXT}"
+
+${KARGER_MIN_CUT_TIMEOUT}:
+	${CXX} ${CXXFLAGS} "${KARGER_MIN_CUT_TIMEOUT}/${MAINFILE}" -o "${OUT_DIR}/${KARGER_MIN_CUT_TIMEOUT}${EXT}"
 
 ${KARGER_STEIN_MIN_CUT}:
 	${CXX} ${CXXFLAGS} "${KARGER_STEIN_MIN_CUT}/${MAINFILE}" -o "${OUT_DIR}/${KARGER_STEIN_MIN_CUT}${EXT}"
@@ -25,7 +29,7 @@ ensure_build_dir:
 # 	cd report; make pdf1
 
 .PHONY: all algs ensure_build_dir clear
-.PHONY: ${KARGER_MIN_CUT} ${KARGER_STEIN_MIN_CUT}
+.PHONY: ${KARGER_MIN_CUT} ${KARGER_MIN_CUT_TIMEOUT} ${KARGER_STEIN_MIN_CUT} 
 
 clear:
-	rm "${KARGER_MIN_CUT}${EXT}" "${KARGER_STEIN_MIN_CUT}${EXT}"
+	rm "${KARGER_MIN_CUT}${EXT}" "${KARGER_MIN_CUT_TIMEOUT}${EXT}" "${KARGER_STEIN_MIN_CUT}${EXT}"
