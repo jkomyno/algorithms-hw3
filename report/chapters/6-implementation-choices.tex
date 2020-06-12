@@ -12,7 +12,7 @@ Gli algoritmi di questo homework operano su grafi non pesati, connessi e non dir
 
 \noindent A differenza della \codeinline{AdjacencyMapGraph} del primo homework, tale struttura dati è stata corredata anche da un'ulteriore attributo (chiamato \textit{edge\_count\_map}) di tipo \textit{edge\_count\_map\_t} che permette, dato un arco $(u,v)$ di restituire il numero di archi $(u,v)$ presenti nel multigrafo. Tale struttura dati è stata realizzata attraverso l'uso di \textit{std::unordered\_map} dove la chiave è di tipo \textit{Edge} che rappresenta l'arco $(u,v)$ che si vuole considerare e il valore restituito è di tipo \textit{size\_t} che rappresenta la quantità di archi $(u,v)$ (o analogamente $(v,u)$) nel multigrafo che sussistono tra i vertici $u, v \in V$ del multigrafo. Dunque questa struttura dati permette di tenere traccia della quantità di archi tra le coppie di nodi del grafo man mano che l'algoritmo di Karger contrae il grafo come descritto nella procedura di \codeinline{full\_contration} nella sezione \ref{sub:karger-definition}.\\
 
-\noident Infine tramite la funzione di hash e l'operatore di uguaglianza di \textit{Edge} abbiamo fatto in modo che l'arco $(u,v)$ sia considerato identico all'arco $(v,u)$ in modo da evitare ripetizioni e mantenere una consistenza dei dati inutile. La funzione di hash viene riportato nel listato \ref{listing:hash-fun}.\\
+\noindent Infine tramite la funzione di hash e l'operatore di uguaglianza di \textit{Edge} abbiamo fatto in modo che l'arco $(u,v)$ sia considerato identico all'arco $(v,u)$ in modo da evitare ripetizioni e mantenere una consistenza dei dati inutile. La funzione di hash viene riportato nel listato \ref{listing:hash-fun}.\\
 
 \begin{listing}[!ht]
 \begin{minted}{c++}
@@ -29,7 +29,7 @@ Gli algoritmi di questo homework operano su grafi non pesati, connessi e non dir
 \label{listing:hash-fun}
 \end{listing}
 
-\noident Oltre a questa nuova attributo della classe, \codeinline{AdjacencyMapGraph} è stata anche estesa con un nuovo metodo denominato \codeinline{contract}, che presi in input 2 vertici (che chiameremo \textit{contracted} e  \textit{incorporator}), contrae il grafo su quei due vertici. In particolare è stato deciso che \textit{contracted} venga eliminato e tutti gli archi che puntavano ad esso, vengono fatti puntare al nodo \textit{incorporator}. Gli step eseguiti da tale funzione sono i seguenti:
+\noindent Oltre a questa nuova attributo della classe, \codeinline{AdjacencyMapGraph} è stata anche estesa con un nuovo metodo denominato \codeinline{contract}, che presi in input 2 vertici (che chiameremo \textit{contracted} e  \textit{incorporator}), contrae il grafo su quei due vertici. In particolare è stato deciso che \textit{contracted} venga eliminato e tutti gli archi che puntavano ad esso, vengono fatti puntare al nodo \textit{incorporator}. Gli step eseguiti da tale funzione sono i seguenti:
 \begin{enumerate}
     \item \textbf{Step 1}: Eliminare tutti gli archi presenti tra \textit{contracted} e \textit{incorportator}, compreso il numero di archi (\textit{contracted}, \textit{incorportator}) da edge\_count\_map.
     
@@ -208,9 +208,9 @@ const auto [min_cut, discovery_time, karger_duration] =
 
 \subsection{Timeout per Karger}
 
-\noindent L'algoritmo di Karger ha complessità temporale \complexityKargerTime{}, quindi i tempi di esecuzione tendono ad aumentare di molto in base al numero di nodi del grafo di input. Per questo motivo abbiamo deciso, in maniera analoga a quanto fatto per l'homework 2 di creare un progetto dove all'algoritmo di Karger abbiamo aggiunto un timeout di esecuzione $T$. Abbiamo fissato il valore di $T$ a 2 minuti.\\
+\noindent L'algoritmo di Karger ha complessità temporale \complexityKargerTime{}, quindi i tempi di esecuzione tendono ad aumentare di molto in base al numero di nodi del grafo di input. Per questo motivo abbiamo deciso, in maniera analoga a quanto fatto per l'algoritmo di Held \& Karp dell'homework 2, di creare un progetto dove all'algoritmo di Karger abbiamo aggiunto un timeout di esecuzione $T$. Abbiamo fissato il valore di $T$ a 2 minuti.\\
 
-\noindent La nostra implementazione di Karger, quindi:
+\noindent La nostra implementazione di Karger con Timeout, quindi:
 
 \begin{enumerate}
     \item Ritorna il min\_cut migliore trovato in k esecuzioni di \codeinline{full\_contraction} se i suoi tempi di esecuzione sono inferiori a $T$ minuti, senza aspettare lo scadere del timeout;
