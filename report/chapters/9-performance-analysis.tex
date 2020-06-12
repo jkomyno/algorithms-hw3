@@ -14,6 +14,10 @@ Misurate i tempi di calcolo della procedura \codeinline{full\_contraction} sui g
 \begin{displayquote}
 Misurate i tempi di calcolo dell'algoritmo di Karger sui grafi del dataset, usando un numero di ripetizioni che garantisca una probabilità minore o uguale a $\frac{1}{n}$ di sbagliare. Mostrate i risultati con un grafico che mostri la variazione dei tempi di calcolo al variare del numero di vertici nel grafo. Confrontate i tempi misurati con la complessità asintotica dell'algoritmo. \\
 
+
+Per permettere all'algoritmo di karger un probabilità di fallimento pari a $\frac{1}{n}$ è necessario settare d = 1 e di conseguenza ricavare k con la formula vista nella sezione \ref{sub:karger-success-probability} e quindi:
+$$ k = 1 * \frac{n^2}{2} * ln(n)$$
+
 Nelle istanze più grandi, il tempo di calcolo necessario a completare tutte le iterazioni potrebbe risultare eccessivo. In questo caso utilizzate un timeout oppure abbassate il numero di ripetizioni per ottenere tempi di esecuzione ragionevoli.
 \end{displayquote}
 
