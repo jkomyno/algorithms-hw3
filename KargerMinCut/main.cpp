@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
 
     std::cout << "k: "s << k << '\n';
 
-    const auto [min_cut, discovery_time, karger_duration] =
+    const auto [min_cut, discovery_time, discovery_iteration, karger_duration] =
         stopwatch::decorator<stopwatch::us_t>(karger)(graph, k, program_time_start);
 
     // stop the stopwatch
@@ -42,4 +42,5 @@ int main(int argc, char** argv) {
     std::cout << "min_cut: "s << min_cut << std::endl;
     std::cout << "program_time: "s << program_time << std::endl;
     std::cout << "discovery_time: "s << discovery_time << std::endl;
+    std::cout << "discovery_iteration: "s << discovery_iteration << std::endl;
 }

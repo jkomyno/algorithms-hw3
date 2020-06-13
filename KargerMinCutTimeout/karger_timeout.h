@@ -1,9 +1,10 @@
 #pragma once
 
+#include <any>       // std::any
+#include <array>     // std::array
 #include <iostream>  // std::cout, std::endl
 #include <limits>    // std::numeric_limits
 #include <memory>    // std::shared_ptr, std::unique_ptr, std::make_unique
-#include <utility>   // std::make_pair
 
 #include "AdjacencyMapGraph.h"
 #include "full_contraction.h"
@@ -12,18 +13,21 @@
 
 /**
  * Run Karger's randomized min-cut algorithm k times on the given graph.
- * Return the a pair containing the min-cut found and the discovery time.
+ * Return the an array containing the min-cut found, the discovery time and the discovery iteration.
  * Time: O(n^4 * log(n))
  * Space: O(n + m)
  */
-[[nodiscard]] auto karger(timeout::timeout_signal&& signal,
-                          const std::shared_ptr<AdjacencyMapGraph>& graph, size_t k,
-                          const stopwatch::time_point_t program_time_start) noexcept {
+[[nodiscard]] std::array<std::any, 3> karger(
+    timeout::timeout_signal&& signal, const std::shared_ptr<AdjacencyMapGraph>& graph, size_t k,
+    const stopwatch::time_point_t program_time_start) noexcept {
     // keep track of the min-cut discovery time
     stopwatch::time_point_t discovery_time_stop;
 
     // keeps track of the minimum cut
     size_t min_cut = std::numeric_limits<size_t>::max();
+
+    // keeps track of the iteration of the minimum cut
+    size_t discovery_iteration = 0;
 
     bool keep_going = true;
 
@@ -37,8 +41,10 @@
         const size_t cut = contracted_graph->edge_size();
 
         if (cut < min_cut) {
-            // a better cut has been found, so we update min_cut and reset stop_discovery_time
+            // a better cut has been found, so we update min_cut, discovery_iteration and reset
+            // stop_discovery_time
             min_cut = cut;
+            discovery_iteration = i;
             discovery_time_stop = stopwatch::now();
         }
 
@@ -54,6 +60,6 @@
 
     // std::make_tuple doesn't work, that's probably related to the fact that std::tuple<...>
     // doesn't have a default constructor but std::packaged_task (used in timeout.h) needs a default
-    // constructor.
-    return std::make_pair(min_cut, discovery_time);
+    // constructor. Using std::array<std::any, 3> is just an escamotage.
+    return {min_cut, discovery_time, discovery_iteration + 1};
 }

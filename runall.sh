@@ -35,7 +35,7 @@ for algorithm in ${algorithms}; do
 
     full_contraction=${full_contractions[$n]}
 
-    ./${run_script} "${exe_folder}/${program}" ${full_contraction} > "benchmark/${output_file}.csv"
+    ./${run_script} "${exe_folder}/${program}" ${full_contraction} > "benchmark/${algorithm}_${output_file}.csv"
 
     n=$(($n+1))
 done
