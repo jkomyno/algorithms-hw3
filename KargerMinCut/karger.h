@@ -23,6 +23,9 @@
     // keeps track of the minimum cut
     size_t min_cut = std::numeric_limits<size_t>::max();
 
+    // keeps track of the iteration of the minimum cut
+    size_t discovery_iteration = 0;
+
     // execute full_contraction k times to hopefully find the minimum cut.
     for (size_t i = 0; i < k; ++i) {
         // get the contracted graph and the full_contraction execution time in microseconds
@@ -33,8 +36,10 @@
         const size_t cut = contracted_graph->edge_size();
 
         if (cut < min_cut) {
-            // a better cut has been found, so we update min_cut and reset stop_discovery_time
+            // a better cut has been found, so we update min_cut, discovery_iteration and reset
+            // stop_discovery_time
             min_cut = cut;
+            discovery_iteration = i;
             discovery_time_stop = stopwatch::now();
         }
 
@@ -45,5 +50,5 @@
     const auto discovery_time =
         stopwatch::duration<stopwatch::us_t>(program_time_start, discovery_time_stop);
 
-    return std::make_tuple(min_cut, discovery_time);
+    return std::make_tuple(min_cut, discovery_time, discovery_iteration + 1);
 }
