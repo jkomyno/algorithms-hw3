@@ -1,3 +1,4 @@
+#include <any>
 #include <iostream>  // std::cout, std::endl
 #include <string>    // std::string_literals
 
@@ -33,11 +34,11 @@ int main(int argc, char** argv) {
     // the timeout is set to 2 minutes
     auto timeout_min = 2min;
 
-    const auto [karger_result, karger_duration] =
+    const auto [result, karger_duration] =
         timeout::with_timeout(std::move(timeout_min), stopwatch::decorator<stopwatch::us_t>(karger),
                               std::ref(graph), k, program_time_start);
 
-    const auto& [min_cut, discovery_time] = karger_result;
+    const auto& [min_cut, discovery_time, discovery_iteration] = result;
 
     // stop the stopwatch
     auto program_time_stop = stopwatch::now();
@@ -46,7 +47,10 @@ int main(int argc, char** argv) {
     const auto program_time =
         stopwatch::duration<stopwatch::us_t>(program_time_start, program_time_stop);
 
-    std::cout << "min_cut: "s << min_cut << std::endl;
+    std::cout << "min_cut: "s << std::any_cast<size_t>(min_cut) << std::endl;
     std::cout << "program_time: "s << program_time << std::endl;
-    std::cout << "discovery_time: "s << discovery_time << std::endl;
+    std::cout << "discovery_time: "s << std::any_cast<decltype(program_time)>(discovery_time)
+              << std::endl;
+    std::cout << "discovery_iteration: "s << std::any_cast<size_t>(discovery_iteration)
+              << std::endl;
 }
