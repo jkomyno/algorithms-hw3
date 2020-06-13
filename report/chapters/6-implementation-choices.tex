@@ -4,39 +4,79 @@
 \subsection{Rappresentazione del grafo}
 \label{sub:graph-representation}
 
-Gli algoritmi di questo homework operano su grafi non pesati, connessi e non diretti.
+Gli algoritmi di questo homework operano su (multi)grafi non pesati,
+connessi e non diretti.\\
 
 % \noindent Come nel precedente homework, per semplificare la logica di indicizzazione dei nodi del grafo, la label dei nodi (originariamente numerata da $1$ a $n$) è decrementata di 1, quindi i nodi sono rappresentati dall'intervallo numerico $[0, n-1]$.
 
-\noindent La classe che rappresenta la Mappa di Adiacenza dei grafi è definita in \codeinline{AdjacencyMapGraph.h} nella cartella \textit{Shared}.\\
+\noindent La classe che rappresenta la Mappa di Adiacenza dei grafi è
+definita in \codeinline{AdjacencyMapGraph.h} nella cartella
+\textit{Shared}. Rispetto alla classe utilizzata nei precedenti
+homework, sono state effettuate alcune modifiche per supportare nuove
+funzionalità richieste dal problema. Queste estensioni sono elencate
+di seguito.
 
-\noindent A differenza della \codeinline{AdjacencyMapGraph} del primo homework, tale struttura dati è stata corredata anche da un'ulteriore attributo (chiamato \textit{edge\_count\_map}) di tipo \textit{edge\_count\_map\_t} che permette, dato un arco $(u,v)$ di restituire il numero di archi $(u,v)$ presenti nel multigrafo. Tale struttura dati è stata realizzata attraverso l'uso di \textit{std::unordered\_map} dove la chiave è di tipo \textit{Edge} che rappresenta l'arco $(u,v)$ che si vuole considerare e il valore restituito è di tipo \textit{size\_t} che rappresenta la quantità di archi $(u,v)$ (o analogamente $(v,u)$) nel multigrafo che sussistono tra i vertici $u, v \in V$ del multigrafo. Dunque questa struttura dati permette di tenere traccia della quantità di archi tra le coppie di nodi del grafo man mano che l'algoritmo di Karger contrae il grafo come descritto nella procedura di \codeinline{full\_contration} nella sezione \ref{sub:karger-definition}.\\
+\paragraph{Multigrafo}
+\codeinline{AdjacencyMapGraph} è stata corredata da un'ulteriore
+attributo (chiamato \codeinline{edge\_count\_map}) di tipo
+\codeinline{edge\_count\_map\_t} che permette, dato un arco $(u,v)$ di
+accedere al numero di archi $(u,v)$ presenti nel multigrafo. Tale
+struttura dati è stata realizzata attraverso l'uso di
+\codeinline{std::unordered\_map}. La chiave della mappa è di tipo
+\codeinline{Edge} e rappresenta il generico arco $(u,v)$, mentre il
+valore è di tipo \codeinline{size\_t} e rappresenta la quantità di
+archi $(u,v)$, o analogamente $(v,u)$. Questa struttura dunque, dati
+permette di tenere traccia della quantità di archi tra le coppie di
+nodi del grafo man mano che l'algoritmo di Karger contrae il grafo
+come descritto nella procedura di \codeinline{full\_contration} nella
+sezione \ref{sub:karger-definition}.\\
 
-\noindent Infine tramite la funzione di hash e l'operatore di uguaglianza di \textit{Edge} abbiamo fatto in modo che l'arco $(u,v)$ sia considerato identico all'arco $(v,u)$ in modo da evitare ripetizioni e mantenere una consistenza dei dati inutile. La funzione di hash viene riportato nel listato \ref{listing:hash-fun}.\\
+\noindent Infine tramite la funzione di hash e l'operatore di
+uguaglianza di \codeinline{Edge} abbiamo fatto in modo che l'arco $(u,v)$
+sia considerato identico all'arco $(v,u)$ in modo da evitare
+ripetizioni e mantenere una consistenza dei dati inutile. La funzione
+di hash viene riportata nel listato \ref{listing:hash-fun}.
 
 \begin{listing}[!ht]
 \begin{minted}{c++}
-  // funzione di hash commutativa per Edge
-    struct edge_hash {
-        std::size_t operator()(const Edge& edge) const noexcept {
-            constexpr auto hash_max = std::numeric_limits<size_t>::max();
-            const auto& [i, j] = edge;
-            return (i * j + (i * i) * (j * j) + (i * i * i) * (j * j * j)) % hash_max;
-        }
-    };
+// funzione di hash commutativa per Edge
+struct edge_hash {
+    std::size_t operator()(const Edge& edge) const noexcept {
+        constexpr auto hash_max = std::numeric_limits<size_t>::max();
+        const auto& [i, j] = edge;
+        return (i * j + (i * i) * (j * j) + (i * i * i) * (j * j * j)) % hash_max;
+    }
+};
 \end{minted}
 \caption{Funzione di hash commutativa per la chiave di tipo Edge della \textit{std::unordered\_map}}
 \label{listing:hash-fun}
 \end{listing}
 
-\noindent Oltre a questa nuova attributo della classe, \codeinline{AdjacencyMapGraph} è stata anche estesa con un nuovo metodo denominato \codeinline{contract}, che presi in input 2 vertici (che chiameremo \textit{contracted} e  \textit{incorporator}), contrae il grafo su quei due vertici. In particolare è stato deciso che \textit{contracted} venga eliminato e tutti gli archi che puntavano ad esso, vengono fatti puntare al nodo \textit{incorporator}. Gli step eseguiti da tale funzione sono i seguenti:
+\paragraph{Contrazione di due nodi}
+Si è reso necessario estendere ulteriormente
+\codeinline{AdjacencyMapGraph} con un nuovo metodo denominato
+\codeinline{contract}. Quest'ultimo, dati due vertici
+\textit{contracted} e \textit{incorporator}, effettua la contrattura
+del grafo. In particolare è stato deciso che \textit{contracted} venga
+eliminato e tutti gli archi che puntavano ad esso, vengono fatti
+puntare al nodo \textit{incorporator}.
+
+\noindent Gli step eseguiti da tale funzione sono i seguenti:
 \begin{enumerate}
-    \item \textbf{Step 1}: Eliminare tutti gli archi presenti tra \textit{contracted} e \textit{incorportator}, compreso il numero di archi (\textit{contracted}, \textit{incorportator}) da edge\_count\_map.
+    \item Eliminare tutti gli archi presenti tra
+      \textit{contracted} e \textit{incorportator}, compreso il numero
+      di archi (\textit{contracted}, \textit{incorportator}) da
+      \codeinline{edge\_count\_map}.
     
-    \item \textbf{Step 2}: Trasferire ogni arco incidente in \textit{contracted} su \textit{incorportator}, aggiornando di conseguenza anche il numero di archi rispettivi in edge\_count\_map.
+    \item Trasferire ogni arco incidente in
+      \textit{contracted} su \textit{incorportator}, aggiornando di
+      conseguenza anche il numero di archi rispettivi in
+      \codeinline{edge\_count\_map}.
     
-     \item \textbf{Step 3}: Eliminare dal grafo il nodo \textit{contracted}.
+    \item Eliminare dal grafo il nodo
+       \textit{contracted}.
 \end{enumerate}
+Il listato \ref{listing:met-contract} ne riporta l'implementazione.
 
 \begin{listing}[!ht]
 \begin{minted}{c++}
@@ -66,8 +106,26 @@ inline void AdjacencyMapGraph::contract(size_t contracted, size_t incorporator) 
 \label{listing:met-contract}
 \end{listing}
 
+\paragraph{Selezione di arco in modo casuale}
+Un'ulteriore metodo aggiunto alla classe, necessario all'algoritmo di
+Karger per la selezione randomica di un arco (o meglio i due vertici)
+da contrarre, è il metodo \codeinline{get\_random\_edge()}.
+Quest'ultimo si occupa di estrarre in maniera casuale un arco dalla
+lista di adiacenza del grafo. Dato che
+\codeinline{std::unordered\_map} non offre soluzioni
+\emph{out-of-the-box} per l'estrazione randomica di una chiave dalla
+mappa, abbiamo dovuto implementare questa operazione da
+zero. \codeinline{get\_random\_edge()}, quindi, trasforma
+temporaneamente la lista di adiacenza in un vettore, e successivamente
+ne seleziona un elemento in posizione casuale. Nel caso peggiore
+questa operazione è lineare sulla taglia degli archi del
+grafo. L'implementazione di tale metodo non viene riportata,
+rimandiamo invece ai sorgenti allegati alla relazione.
 
-Un'ulteriore metodo aggiunto alla classe, necessario all'algoritmo di Karger per selezionare randomicamente un arco (o meglio i due vertici) da contrarre è il metodo chiamato \codeinline{get\_random\_edge()}. Quest'ultimo si occupa di estrarre in maniera casuale un arco dalla lista di adiacenza del grafo, trasformando temporaneamente la lista di adiacenza in un vettore per poi estrarre da quest'ultimo un elemento in una posizione casuale, dato che std::unordered\_map non offre soluzioni \textit{out-of-the-box} per l'estrazione randomica di una chiave da mappa. Nel caso peggiore questa operazione è lineare sulla taglia degli archi del grafo. Per tale metodo non ne riportiamo il codice, che viene allegato nei file sorgente.
+\subsection{Lettura del Grafo}
+
+\noindent Il file \codeinline{main.cpp} ha la stessa struttura per
+ogni algoritmo, come riportato nel listato \ref{listing:main-cpp}.
 
 \begin{listing}[!ht]
 \begin{minted}{c++}
@@ -108,27 +166,36 @@ int main(int argc, char** argv) {
 \label{listing:main-cpp}
 \end{listing}
 
-\subsection{Lettura del Grafo}
-
-\noindent Il file \codeinline{main.cpp} ha la stessa struttura per ogni algoritmo, si veda il listing \ref{listing:main-cpp}.
-Ci aspettiamo in input file rappresentati come liste di adiacenza, dove, per ogni riga:
+L'input di ogni programma è un file, il cui contenuto una lista di
+adiacenza, dove, per ogni riga:
 
 \begin{itemize}
     \item la prima colonna indica la label del vertice $u$;
-    \item gli elementi successivi formano la lista di tutti i vertici incidenti a $u$, cioè i $v$ tali che \\ $\exists$ $(u, v) \in E$.
+    \item gli elementi successivi formano la lista di tutti i vertici
+      incidenti a $u$, cioè i $v$ tali che \\ $\exists$ $(u, v) \in
+      E$.
 \end{itemize}
 
-Ad alto livello, le operazioni svolte sono:
+\noiindet Ad alto livello, le operazioni svolte da ogni programma sono:
 
 \begin{enumerate}
-    \item Lettura del file di input: il file di input viene processato da \codeinline{read\_file.h}. Viene letta una riga per volta in un buffer, e il primo elemento di tale buffer è usato per etichettare il nodo della lista di adiacenza letta.
+    \item Lettura dell'input: il file di input viene processato
+      da \codeinline{read\_file.h}. Viene letta una riga per volta in
+      un buffer, e il primo elemento di tale buffer è usato per
+      etichettare il nodo della lista di adiacenza letta.
 
-    \noindent Abbiamo usato la libreria di file streaming nativa di C++ (\codeinline{fstream}).
+    \noindent Abbiamo usato la libreria di file streaming nativa di
+    C++ (\codeinline{fstream}).
 
-    \item Una volta letti i nodi, viene creata la Mappa di Adiancenza nella memoria heap, e ne viene ritornato uno \textit{smart-pointer} di tipo \mintinline{c++}{std::shared_ptr}.
+    \item Una volta letti i nodi, viene creata la Mappa di Adiancenza
+      nella memoria heap, e ne viene ritornato uno
+      \textit{smart-pointer} di tipo
+      \mintinline{c++}{std::shared_ptr}.
 \end{enumerate}
 
-\noindent Tutti i file citati qui sopra sono nella cartella \textit{Shared} del progetto consegnato e sono corredati di ulteriori commenti esplicativi.
+\noindent Tutti i file citati precedentemento sono locati nella
+cartella \textit{Shared} del progetto consegnato e sono corredati di
+ulteriori commenti esplicativi.
 
 %\subsection{Strutture Dati comuni}
 
@@ -139,25 +206,43 @@ Ad alto livello, le operazioni svolte sono:
 \subsection{Misurazione del tempo di esecuzione}
 \label{sub:stopwatch}
 
-\noindent \codeinline{C++17} non fornisce soluzione \textit{out-of-the-box} ad alto livello per registrare il tempo di esecuzione di singoli metodi o blocchi di codice. Abbiamo quindi implementato una funzione \codeinline{decorator} che astrae il compito di misurare i tempi di esecuzione di una funzione. \\
+\noindent \codeinline{C++17} non fornisce soluzione
+\textit{out-of-the-box} ad alto livello per registrare il tempo di
+esecuzione di singoli metodi o blocchi di codice. Abbiamo quindi
+implementato una funzione \codeinline{decorator} che astrae il compito
+di misurare i tempi di esecuzione di una funzione. \\
 
-\noindent \codeinline{Shared/stopwatch\_decorator.h} definisce la funzione generica \codeinline{decorator}, che:
+\noindent \codeinline{Shared/stopwatch\_decorator.h} definisce la
+funzione generica \codeinline{decorator}, che:
 
 \begin{itemize}
-    \item riceve in input la funzione \codeinline{func} da eseguire e misurare;
-    \item ritorna un'altra funzione che riceve in input i parametri variadici \codeinline{args} della funzione \codeinline{func};
-    \item all'interno della funzione ritornata, viene avviato un cronometro;
-    \item viene eseguita la funzione e ne viene catturato il risultato in una variabile contenitore;
-    \item viene interrotto il cronometro e salvato il tempo di esecuzione;
-    \item viene ritornato il risultato della funzione corredato del tempo di esecuzione. Ci sono due possibilità:
+    \item riceve in input la funzione \codeinline{func} da eseguire e
+      misurare;
+    \item ritorna un'altra funzione che riceve in input i parametri
+      variadici \codeinline{args} della funzione \codeinline{func};
+    \item all'interno della funzione ritornata, viene avviato un
+      cronometro;
+    \item viene eseguita la funzione e ne viene catturato il risultato
+      in una variabile contenitore;
+    \item viene interrotto il cronometro e salvato il tempo di
+      esecuzione;
+    \item viene ritornato il risultato della funzione corredato del
+      tempo di esecuzione. Ci sono due possibilità:
     \begin{enumerate}
-        \item se \codeinline{func(args...)} ritorna una tupla (\mintinline{c++}{std::tuple<...>}), il tempo di esecuzione è appeso in coda al risultato della funzione;
-        \item se invece \codeinline{func(args)...} ritorna un qualsiasi altro tipo, viene creata una nuova tupla contenente il risultato della funzione e il tempo di esecuzione.
+        \item se \codeinline{func(args...)} ritorna una tupla
+          (\mintinline{c++}{std::tuple<...>}), il tempo di esecuzione
+          è appeso in coda al risultato della funzione;
+        \item se invece \codeinline{func(args)...} ritorna un
+          qualsiasi altro tipo, viene creata una nuova tupla
+          contenente il risultato della funzione e il tempo di
+          esecuzione.
     \end{enumerate}
 \end{itemize}
 
-Si veda il listing \ref{listings:stopwatch-decorator} per un estratto della funzione \codeinline{decorator}.
-Si veda invece il listing \ref{listings:stopwatch-decorator-usage} per un'esempio di utilizzo di tale funzione.
+Si veda il listing \ref{listings:stopwatch-decorator} per un estratto
+della funzione \codeinline{decorator}.  Si veda invece il listing
+\ref{listings:stopwatch-decorator-usage} per un'esempio di utilizzo di
+tale funzione.
 
 \begin{listing}[!ht]
 \begin{minted}{c++}
@@ -185,7 +270,8 @@ auto decorator(F&& func) {
   };
 }
 \end{minted}
-\caption{Estratto della funzione \codeinline{decorator} per rilevare i tempi di esecuzione di una funzione.}
+\caption{Estratto della funzione \codeinline{decorator} per rilevare i
+  tempi di esecuzione di una funzione.}
 \label{listings:stopwatch-decorator}
 \end{listing}
 
@@ -202,26 +288,65 @@ const auto [min_cut, discovery_time, karger_duration] =
     stopwatch::decorator<stopwatch::us_t>(karger)(graph, k, program_time_start);
 
 \end{minted}
-\caption{Esempio di utilizzo della funzione \codeinline{decorator} per rilevare i tempi di esecuzione di una funzione.}
+\caption{Esempio di utilizzo della funzione \codeinline{decorator} per
+  rilevare i tempi di esecuzione di una funzione.}
 \label{listings:stopwatch-decorator-usage}
 \end{listing}
 
 \subsection{Timeout per Karger}
 
-\noindent L'algoritmo di Karger ha complessità temporale \complexityKargerTime{}, quindi i tempi di esecuzione tendono ad aumentare di molto in base al numero di nodi del grafo di input. Per questo motivo abbiamo deciso, in maniera analoga a quanto fatto per l'algoritmo di Held \& Karp dell'homework 2, di creare un progetto dove all'algoritmo di Karger abbiamo aggiunto un timeout di esecuzione $T$. Abbiamo fissato il valore di $T$ a 2 minuti.\\
+\noindent L'algoritmo di Karger ha complessità temporale
+\complexityKargerTime{}, quindi i tempi di esecuzione tendono ad
+aumentare di molto in base al numero di nodi del grafo di input. Per
+questo motivo abbiamo deciso, in maniera analoga a quanto fatto per
+l'algoritmo di Held \& Karp dell'\emph{homework 2}, di creare un progetto
+dove all'algoritmo di Karger abbiamo aggiunto un timeout di esecuzione
+$T$. Abbiamo fissato il valore di $T$ a 2 minuti.\\
 
 \noindent La nostra implementazione di Karger con Timeout, quindi:
 
 \begin{enumerate}
-    \item Ritorna il min\_cut migliore trovato in k esecuzioni di \codeinline{full\_contraction} se i suoi tempi di esecuzione sono inferiori a $T$ minuti, senza aspettare lo scadere del timeout;
-    \item Se invece il timeout scade, termina preventivamente le k esecuzioni di \codeinline{full\_contraction} e ritorna il miglior min\_cut trovato fino a quel momento. A seconda del tempo impiegato da una singola esecuzione di \codeinline{full\_contraction}, l'algoritmo potrebbe ritornare il valore dopo qualche secondo dello scadere del timeout.
+    \item Ritorna il min\_cut migliore trovato in k esecuzioni di
+      \codeinline{full\_contraction} se i suoi tempi di esecuzione
+      sono inferiori a $T$ minuti, senza aspettare lo scadere del
+      timeout;
+    \item Se invece il timeout scade, termina preventivamente le k
+      esecuzioni di \codeinline{full\_contraction} e ritorna il
+      miglior min\_cut trovato fino a quel momento. A seconda del
+      tempo impiegato da una singola esecuzione di
+      \codeinline{full\_contraction}, l'algoritmo potrebbe ritornare
+      il valore dopo qualche secondo dello scadere del timeout.
 \end{enumerate}
 
-\noindent C++17 non fornisce soluzione \textit{out-of-the-box} ad alto livello per eseguire funzioni con un limite di tempo. Abbiamo quindi implementato un meccanismo di questo tipo in \codeinline{Shared/timeout.h}, il cui funzionamento ad alto livello è il seguente:
+\noindent C++17 non fornisce soluzione \textit{out-of-the-box} ad alto
+livello per eseguire funzioni con un limite di tempo. Abbiamo quindi
+implementato un meccanismo di questo tipo in
+\codeinline{Shared/timeout.h}, il cui funzionamento ad alto livello è
+il seguente:
 
 \begin{itemize}
-    \item Il thread principale crea un \textit{worker thread} incaricandolo di eseguire la funzione passata (in questo caso l'algoritmo di Karger) sul grafo letto in input. Fa quindi partire il timeout e resta in attesa del risultato del worker thread. Tale risultato sarà disponibile da un \codeinline{std::future}.
-    \item Se il worker thread termina prima dello scadere del timeout, il thread principale è immediatamente sbloccato e il risultato della funzione (restituito da \codeinline{std::future::get()}) è ritornato al chiamante.
-    \item Se il timeout scade e il worker thread non ha ancora terminato l'esecuzione, il thread principale gli notifica di terminare l'esecuzione il prima possibile. Tale notifica avviene forzando la conclusione di una \codeinline{std::promise} creata dal main thread e data in input alla funzione eseguita incapsulata nella classe \codeinline{timeout\_signal}.
-    \item Quando la funzione eseguita si accorge che il tempo a disposizione è scaduto, interrompe la ricorsione e ritorna al chiamante la migliore soluzione individuata fino a quel momento.
+    \item Il thread principale crea un \textit{worker thread}
+      incaricandolo di eseguire la funzione passata (in questo caso
+      l'algoritmo di Karger) sul grafo letto in input. Fa quindi
+      partire il timeout e resta in attesa del risultato del worker
+      thread. Tale risultato sarà disponibile da un
+      \codeinline{std::future}.
+    \item Se il worker thread termina prima dello scadere del timeout,
+      il thread principale è immediatamente sbloccato e il risultato
+      della funzione (restituito da \codeinline{std::future::get()}) è
+      ritornato al chiamante.
+    \item Se il timeout scade e il worker thread non ha ancora
+      terminato l'esecuzione, il thread principale gli notifica di
+      terminare l'esecuzione il prima possibile. Tale notifica avviene
+      forzando la conclusione di una \codeinline{std::promise} creata
+      dal main thread e data in input alla funzione eseguita
+      incapsulata nella classe \codeinline{timeout\_signal}.
+    \item Quando la funzione eseguita si accorge che il tempo a
+      disposizione è scaduto, interrompe la ricorsione e ritorna al
+      chiamante la migliore soluzione individuata fino a quel momento.
 \end{itemize}
+
+\noindent Dato lo scarso valore aggiunto dal punto di vista del
+codice, l'implementazione dell'algoritmo di Karger con il timeout non
+è riportata sulla relazione; si rimanda invece ai sorgenti allegati
+per la consultazione della stessa.
