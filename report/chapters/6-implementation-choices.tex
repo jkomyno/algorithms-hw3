@@ -206,25 +206,43 @@ ulteriori commenti esplicativi.
 \subsection{Misurazione del tempo di esecuzione}
 \label{sub:stopwatch}
 
-\noindent \codeinline{C++17} non fornisce soluzione \textit{out-of-the-box} ad alto livello per registrare il tempo di esecuzione di singoli metodi o blocchi di codice. Abbiamo quindi implementato una funzione \codeinline{decorator} che astrae il compito di misurare i tempi di esecuzione di una funzione. \\
+\noindent \codeinline{C++17} non fornisce soluzione
+\textit{out-of-the-box} ad alto livello per registrare il tempo di
+esecuzione di singoli metodi o blocchi di codice. Abbiamo quindi
+implementato una funzione \codeinline{decorator} che astrae il compito
+di misurare i tempi di esecuzione di una funzione. \\
 
-\noindent \codeinline{Shared/stopwatch\_decorator.h} definisce la funzione generica \codeinline{decorator}, che:
+\noindent \codeinline{Shared/stopwatch\_decorator.h} definisce la
+funzione generica \codeinline{decorator}, che:
 
 \begin{itemize}
-    \item riceve in input la funzione \codeinline{func} da eseguire e misurare;
-    \item ritorna un'altra funzione che riceve in input i parametri variadici \codeinline{args} della funzione \codeinline{func};
-    \item all'interno della funzione ritornata, viene avviato un cronometro;
-    \item viene eseguita la funzione e ne viene catturato il risultato in una variabile contenitore;
-    \item viene interrotto il cronometro e salvato il tempo di esecuzione;
-    \item viene ritornato il risultato della funzione corredato del tempo di esecuzione. Ci sono due possibilità:
+    \item riceve in input la funzione \codeinline{func} da eseguire e
+      misurare;
+    \item ritorna un'altra funzione che riceve in input i parametri
+      variadici \codeinline{args} della funzione \codeinline{func};
+    \item all'interno della funzione ritornata, viene avviato un
+      cronometro;
+    \item viene eseguita la funzione e ne viene catturato il risultato
+      in una variabile contenitore;
+    \item viene interrotto il cronometro e salvato il tempo di
+      esecuzione;
+    \item viene ritornato il risultato della funzione corredato del
+      tempo di esecuzione. Ci sono due possibilità:
     \begin{enumerate}
-        \item se \codeinline{func(args...)} ritorna una tupla (\mintinline{c++}{std::tuple<...>}), il tempo di esecuzione è appeso in coda al risultato della funzione;
-        \item se invece \codeinline{func(args)...} ritorna un qualsiasi altro tipo, viene creata una nuova tupla contenente il risultato della funzione e il tempo di esecuzione.
+        \item se \codeinline{func(args...)} ritorna una tupla
+          (\mintinline{c++}{std::tuple<...>}), il tempo di esecuzione
+          è appeso in coda al risultato della funzione;
+        \item se invece \codeinline{func(args)...} ritorna un
+          qualsiasi altro tipo, viene creata una nuova tupla
+          contenente il risultato della funzione e il tempo di
+          esecuzione.
     \end{enumerate}
 \end{itemize}
 
-Si veda il listing \ref{listings:stopwatch-decorator} per un estratto della funzione \codeinline{decorator}.
-Si veda invece il listing \ref{listings:stopwatch-decorator-usage} per un'esempio di utilizzo di tale funzione.
+Si veda il listing \ref{listings:stopwatch-decorator} per un estratto
+della funzione \codeinline{decorator}.  Si veda invece il listing
+\ref{listings:stopwatch-decorator-usage} per un'esempio di utilizzo di
+tale funzione.
 
 \begin{listing}[!ht]
 \begin{minted}{c++}
@@ -252,7 +270,8 @@ auto decorator(F&& func) {
   };
 }
 \end{minted}
-\caption{Estratto della funzione \codeinline{decorator} per rilevare i tempi di esecuzione di una funzione.}
+\caption{Estratto della funzione \codeinline{decorator} per rilevare i
+  tempi di esecuzione di una funzione.}
 \label{listings:stopwatch-decorator}
 \end{listing}
 
@@ -269,7 +288,8 @@ const auto [min_cut, discovery_time, karger_duration] =
     stopwatch::decorator<stopwatch::us_t>(karger)(graph, k, program_time_start);
 
 \end{minted}
-\caption{Esempio di utilizzo della funzione \codeinline{decorator} per rilevare i tempi di esecuzione di una funzione.}
+\caption{Esempio di utilizzo della funzione \codeinline{decorator} per
+  rilevare i tempi di esecuzione di una funzione.}
 \label{listings:stopwatch-decorator-usage}
 \end{listing}
 
