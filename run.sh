@@ -12,7 +12,7 @@ dataset="dataset"
 header="filename;nodes;k;expected_min_cut;min_cut;program_time"
 
 if [ $measure_full_contraction -eq "1" ]; then
-    header="${header};discovery_time;full_contraction"
+    header="${header};discovery_time;discovery_iteration;full_contraction"
 fi
 
 echo $header
