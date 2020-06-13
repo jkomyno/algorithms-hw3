@@ -1,29 +1,48 @@
 \section{Definizione del problema minimum-cut}
 \label{cap:problem-definition}
 
-Sia $ G = (V,E) $ un grafo non diretto con $ n $ vertici e $ m $ lati. Siamo interessati alla nozione di \textit{taglio} di un grafo.
+Nella teoria dei grafi, un \emph{minimum cut} di $G$ è un taglio
+minimo rispetto a quelche nozione di distanza tra tagli.
 
-\begin{defn}
-Un \textbf{taglio} (cut) in $ G $ è un partizionamento dei vertici $ V $ in 2 insiemi, $ S $ e $ T $, $ T=V(G) \setminus S$, dove gli archi di un taglio sono $(S, T) = \{ uv \shortmid u \in S, v \in T, S \cup T = V, uv \in E \}$,
-dove $ S \neq \emptyset $ e $ T \neq \emptyset $. Il numero di archi nel taglio $ (S,T) $ è noto come \textit{dimensione} del taglio.
+\begin{defn}{\emph{(Taglio)}}
+  Dato $G = (V,E)$ non diretto, connesso, con $n$ vertici e $m$ lati;
+  un taglio (cut) $C \subseteq E$ è un insieme di lati tali che $G' =
+  (V, E \setminus C)$ non è connesso.
 \end{defn}
 
-\noindent Siamo interessati nel problema del calcolo del \textit{minimum cut}, ovvero il taglio di cardinalità minima nel grafo.
-Formalmente, vogliamo trovare $ S\subseteq V $ tale che $ (S, T) $ sia minimo, $ S \neq \varnothing $ e $ S \neq T $.
-Nella letteratura, il problema è formalizzato in due modi:
+\noindent Come corollario ottiniamo che il grafo $G'$ deve avere
+almeno due componenti connesse, e nel nostro caso ci interessa
+ottenere esattamente due compoenenti connesse. Inoltre, la definizione
+può essere facilmente estesa al caso di grafi pesati, diretti e anche
+multigrafi.\\
+
+\noindent In particolare, siamo interessati nel problema del calcolo
+del \textit{minimum cut}, e la nozione di distanza utilizzata è quella
+della cardinalità del taglio. \\
+Formalmente, il minimum cut è un taglio $C \subseteq E$ tale che $\mid
+C \mid$ sia minima.\\
+
+\noindent In letteratura, il problema è formalizzato in due modi:
 
 \begin{itemize}
-    \item nel \textit{s-t min-cut problem}, due vertici particolari $s$ e $t$ sono richiesti essere nelle due parti opposte del taglio;
-    \item nel \textit{global min-cut problem}, non si fa riferimento ad alcun vertice specifico.
+    \item \textit{s-t min-cut problem}, due vertici particolari $s$ e
+      $t$ sono richiesti essere nelle due parti opposte del taglio;
+    \item \textit{global min-cut problem}, non si fa riferimento ad
+      alcun vertice specifico.
 \end{itemize}
 
-\noindent In questo homework tratteremo solo del \textit{global min-cut problem}. \\
-\noindent Questo problema ha numerose applicazioni, ad esempio:
+\noindent In questo homework affronteremo solo il \textit{global
+  min-cut problem}. \\
+
+\noindent Trovare un minimum cut in un grafo è un problema rilevante e
+un algoritmo in grado di farlo è richiesto ed utilizzato in molteplici
+applicazioni, ad esempio:
 
 \begin{itemize}
-    \item determinare la solidità del design di una rete di calcolatori;
-    \item nell'ambito dell'Information Retrieval, identificare cluster di documenti correlati da certi topic in comune;
+    \item determinare la solidità del design di una rete di
+      calcolatori;
+    \item nell'ambito dell'Information Retrieval, identificare cluster
+      di documenti correlati da certi topic in comune;
     \item nella progettazione di compilatori per linguaggi paralleli;
-    \item nell'ottimizzazione combinatoria su larga scala;
-    \item e molte altre applicazioni \ldots
+    \item nell'ottimizzazione combinatoria su larga scala.
 \end{itemize}
