@@ -295,20 +295,58 @@ const auto [min_cut, discovery_time, karger_duration] =
 
 \subsection{Timeout per Karger}
 
-\noindent L'algoritmo di Karger ha complessità temporale \complexityKargerTime{}, quindi i tempi di esecuzione tendono ad aumentare di molto in base al numero di nodi del grafo di input. Per questo motivo abbiamo deciso, in maniera analoga a quanto fatto per l'algoritmo di Held \& Karp dell'homework 2, di creare un progetto dove all'algoritmo di Karger abbiamo aggiunto un timeout di esecuzione $T$. Abbiamo fissato il valore di $T$ a 2 minuti.\\
+\noindent L'algoritmo di Karger ha complessità temporale
+\complexityKargerTime{}, quindi i tempi di esecuzione tendono ad
+aumentare di molto in base al numero di nodi del grafo di input. Per
+questo motivo abbiamo deciso, in maniera analoga a quanto fatto per
+l'algoritmo di Held \& Karp dell'\emph{homework 2}, di creare un progetto
+dove all'algoritmo di Karger abbiamo aggiunto un timeout di esecuzione
+$T$. Abbiamo fissato il valore di $T$ a 2 minuti.\\
 
 \noindent La nostra implementazione di Karger con Timeout, quindi:
 
 \begin{enumerate}
-    \item Ritorna il min\_cut migliore trovato in k esecuzioni di \codeinline{full\_contraction} se i suoi tempi di esecuzione sono inferiori a $T$ minuti, senza aspettare lo scadere del timeout;
-    \item Se invece il timeout scade, termina preventivamente le k esecuzioni di \codeinline{full\_contraction} e ritorna il miglior min\_cut trovato fino a quel momento. A seconda del tempo impiegato da una singola esecuzione di \codeinline{full\_contraction}, l'algoritmo potrebbe ritornare il valore dopo qualche secondo dello scadere del timeout.
+    \item Ritorna il min\_cut migliore trovato in k esecuzioni di
+      \codeinline{full\_contraction} se i suoi tempi di esecuzione
+      sono inferiori a $T$ minuti, senza aspettare lo scadere del
+      timeout;
+    \item Se invece il timeout scade, termina preventivamente le k
+      esecuzioni di \codeinline{full\_contraction} e ritorna il
+      miglior min\_cut trovato fino a quel momento. A seconda del
+      tempo impiegato da una singola esecuzione di
+      \codeinline{full\_contraction}, l'algoritmo potrebbe ritornare
+      il valore dopo qualche secondo dello scadere del timeout.
 \end{enumerate}
 
-\noindent C++17 non fornisce soluzione \textit{out-of-the-box} ad alto livello per eseguire funzioni con un limite di tempo. Abbiamo quindi implementato un meccanismo di questo tipo in \codeinline{Shared/timeout.h}, il cui funzionamento ad alto livello è il seguente:
+\noindent C++17 non fornisce soluzione \textit{out-of-the-box} ad alto
+livello per eseguire funzioni con un limite di tempo. Abbiamo quindi
+implementato un meccanismo di questo tipo in
+\codeinline{Shared/timeout.h}, il cui funzionamento ad alto livello è
+il seguente:
 
 \begin{itemize}
-    \item Il thread principale crea un \textit{worker thread} incaricandolo di eseguire la funzione passata (in questo caso l'algoritmo di Karger) sul grafo letto in input. Fa quindi partire il timeout e resta in attesa del risultato del worker thread. Tale risultato sarà disponibile da un \codeinline{std::future}.
-    \item Se il worker thread termina prima dello scadere del timeout, il thread principale è immediatamente sbloccato e il risultato della funzione (restituito da \codeinline{std::future::get()}) è ritornato al chiamante.
-    \item Se il timeout scade e il worker thread non ha ancora terminato l'esecuzione, il thread principale gli notifica di terminare l'esecuzione il prima possibile. Tale notifica avviene forzando la conclusione di una \codeinline{std::promise} creata dal main thread e data in input alla funzione eseguita incapsulata nella classe \codeinline{timeout\_signal}.
-    \item Quando la funzione eseguita si accorge che il tempo a disposizione è scaduto, interrompe la ricorsione e ritorna al chiamante la migliore soluzione individuata fino a quel momento.
+    \item Il thread principale crea un \textit{worker thread}
+      incaricandolo di eseguire la funzione passata (in questo caso
+      l'algoritmo di Karger) sul grafo letto in input. Fa quindi
+      partire il timeout e resta in attesa del risultato del worker
+      thread. Tale risultato sarà disponibile da un
+      \codeinline{std::future}.
+    \item Se il worker thread termina prima dello scadere del timeout,
+      il thread principale è immediatamente sbloccato e il risultato
+      della funzione (restituito da \codeinline{std::future::get()}) è
+      ritornato al chiamante.
+    \item Se il timeout scade e il worker thread non ha ancora
+      terminato l'esecuzione, il thread principale gli notifica di
+      terminare l'esecuzione il prima possibile. Tale notifica avviene
+      forzando la conclusione di una \codeinline{std::promise} creata
+      dal main thread e data in input alla funzione eseguita
+      incapsulata nella classe \codeinline{timeout\_signal}.
+    \item Quando la funzione eseguita si accorge che il tempo a
+      disposizione è scaduto, interrompe la ricorsione e ritorna al
+      chiamante la migliore soluzione individuata fino a quel momento.
 \end{itemize}
+
+\noindent Dato lo scarso valore aggiunto dal punto di vista del
+codice, l'implementazione dell'algoritmo di Karger con il timeout non
+è riportata sulla relazione; si rimanda invece ai sorgenti allegati
+per la consultazione della stessa.
