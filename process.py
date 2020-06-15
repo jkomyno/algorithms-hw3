@@ -34,7 +34,8 @@ if __name__ == '__main__':
     except TypeError:
         min_cut_raw = full_contraction_raw
     finally:
-        full_contraction_mean = math.floor(statistics.mean(full_contraction_times))
+        if measure_full_contraction:
+            full_contraction_mean = math.floor(statistics.mean(full_contraction_times))
         min_cut = parse('min_cut: {}', min_cut_raw)[0]
 
     program_time_raw = next(lines)
