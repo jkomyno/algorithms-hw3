@@ -51,16 +51,19 @@ IS_SAVE_PLOT_ENABLED = '--save-plot' in sys.argv
 PLOT_IMG_DIR = 'images'
 
 KARGER = 'KargerMinCut'
+KARGER_TOUT = 'KargerMinCutTimeout'
 KARGER_STEIN = 'KargerSteinMinCut'
 
 programs = [
     KARGER,
-    KARGER_STEIN
+    KARGER_TOUT,
+    # KARGER_STEIN
 ]
 
 ms_programs = [
     'ms_karger_min_cut',
-    'ms_karger_stein_min_cut',
+    'ms_karger_min_cut_timeout',
+    # 'ms_karger_stein_min_cut',
 ]
 
 GROUND_TRUTH_DF = pd.DataFrame({
@@ -175,6 +178,7 @@ def get_min_at_row(dfs: List[pd.DataFrame], row: int, column: str = 'program_tim
     min_index, min_value = min(enumerate(values_at_row_column), key=lambda x: x[1])
     return min_index, min_value
 
+
 def get_median_at_row(dfs: List[pd.DataFrame], row: int, column: str = 'output') -> np.double:
     """
     Return the median value of a certain column among the given list of benchmark dataframes in a certain row
@@ -185,6 +189,18 @@ def get_median_at_row(dfs: List[pd.DataFrame], row: int, column: str = 'output')
     """
     values_at_row_column = [df[column].loc[row] for df in dfs]
     return np.median(values_at_row_column)
+
+
+def get_mean_at_row(dfs: List[pd.DataFrame], row: int, column: str) -> np.double:
+    """
+    Return the mean value of a certain column among the given list of benchmark dataframes in a certain row
+    :param dfs: list of benchmark dataframes
+    :param row: index of the row to be selected
+    :param column: column of the dataframe to be selected. Default: 'program_time'
+    :return: mean value of column at row
+    """
+    values_at_row_column = [df[column].loc[row] for df in dfs]
+    return np.mean(values_at_row_column)
 
 
 def create_list_of_ms_at_row(dfs_list: List[pd.DataFrame], columns: List[int]) -> List[List[np.double]]:
@@ -246,27 +262,28 @@ def compare_2_programs(dfs_dict: Dict[str, pd.DataFrame], program_1: str, progra
 
 def compare_n_programs(dfs_dict: Dict[str, pd.DataFrame], programs: List[str]):
 
-    df = GROUND_TRUTH_DF
+    # df = GROUND_TRUTH_DF
+    df = pd.DataFrame()
 
     for program in programs:
-        data = dfs_dict[program][['d', 'program_time', 'output', 'filename']]
+        data = dfs_dict[program][['filename', 'expected_min_cut', 'min_cut', 'min_cut_error']]
 
-        data = data[['output', 'program_time']]
-        data['error'] = calculate_error(df['exact'].tolist(), data['output'].tolist())
+        # data = data[['output', 'program_time']]
+        # data['error'] = calculate_error(df['exact'].tolist(), data['output'].tolist())
 
-        # https://stackoverflow.com/questions/17985159/creating-dataframe-with-hierarchical-columns
-        # is not working when pretty printed.
+        # # https://stackoverflow.com/questions/17985159/creating-dataframe-with-hierarchical-columns
+        # # is not working when pretty printed.
         df = pd.concat([df, data], axis=1, sort=False)
 
-    df = df.sort_values('d')
-    df = df.drop('d', axis=1)
-    df = df.rename(columns={
-        'instance': 'Instance',
-        'exact': 'Exact',
-        'output':'Solution',
-        'program_time': 'Time (ms)',
-        'error': 'Error (%)'
-    })
+    # df = df.sort_values('d')
+    # df = df.drop('d', axis=1)
+    # df = df.rename(columns={
+    #     'instance': 'Instance',
+    #     'exact': 'Exact',
+    #     'output':'Solution',
+    #     'program_time': 'Time (ms)',
+    #     'error': 'Error (%)'
+    # })
 
     return df
 
@@ -306,34 +323,46 @@ def pretty_print_pandas(df: pd.DataFrame, tablefmt='pretty'):
     print('\n')
 
 
-def minimize_ms_dataframes_helper(dfs: List[pd.DataFrame]) -> pd.DataFrame:
+def merge_dataframes_helper(dfs: List[pd.DataFrame]) -> pd.DataFrame:
     """
-    Create a new in-memory DataFrame that, for each row of all the dataframes in dfs, keeps only the row with the
-    minimum 'program_time' value.
+    Create a new in-memory DataFrame that, for each row of all the dataframes in dfs, keeps only the first row 
+    values merging `program_time`, `discovery_time` and `full_contraction` by mean, `discovery_iteration` by median,
+    while other columns are taken arbitrarily from the first.
     :param dfs: List of DataFrames for a single program
-    :return: new DataFrame minimized row-wise wrt the value of the 'program_time' column
+    :return: new DataFrame merged row-wise
     """
-    columns = ['program_time', 'output', 'd', 'weight_type', 'filename']
-    min_df = pd.DataFrame(columns=columns)
+    columns = ['filename', 'nodes', 'k', 'expected_min_cut', 'min_cut', 'program_time', 'discovery_time', 
+               'full_contraction', 'min_cut_error' ]  # TODO: add missing columns
+    merged_df = pd.DataFrame(columns=columns)
 
     n_rows = dfs[0].shape[0]
     for row in range(n_rows):
-        min_index, _ = get_min_at_row(dfs, row, column='program_time')
-        median_output = get_median_at_row(dfs, row, column='output')
-        data = dfs[min_index].loc[row].copy()  # need to copy to avoid side effect on original dataframe.
-        data['output'] = median_output
-        min_df = min_df.append(data)
+        row_index = 0  # arbitrarily choosing first row
+        program_time = get_mean_at_row(dfs, row, column='program_time')
+        discovery_time = get_mean_at_row(dfs, row, column='discovery_time')
+        discovery_iteration = get_median_at_row(dfs, row, column='discovery_iteration')
+        full_contraction = get_mean_at_row(dfs, row, column='full_contraction')
 
-    return min_df.round(decimals=N_DECIMALS)
+        data = dfs[row_index].loc[row].copy()  # need to copy to avoid side effect on original dataframe.
+
+        data['program_time'] = program_time
+        data['discovery_time'] = discovery_time
+        data['discovery_iteration'] = discovery_iteration
+        data['full_contraction'] = full_contraction
+        data['min_cut_error'] = 100 * (data['min_cut'] - data['expected_min_cut']) / data['expected_min_cut']
+
+        merged_df = merged_df.append(data)
+
+    return merged_df.round(decimals=N_DECIMALS)
 
 
-def minimize_ms_dataframes(dfs_dict: Dict[str, List[pd.DataFrame]]) -> Dict[str, pd.DataFrame]:
+def merge_dataframes(dfs_dict: Dict[str, List[pd.DataFrame]]) -> Dict[str, pd.DataFrame]:
     """
-    For each list of DataFrames stored in dfs_dict keys, retain only the rows which value at column 'program_time' is minimum.
+    For each list of DataFrames stored in dfs_dict keys, merge rows with some logics (see `merge_dataframes_helper`).
     :param dfs_dict: original map of list of benchmark DataFrames for each program
-    :return: minimized map of 1 dataframe for each program wrt to column 'program_time'
+    :return: merged map of 1 dataframe for each program
     """
-    dfs_flat_min = [minimize_ms_dataframes_helper(dfs) for dfs in dfs_dict.values()]
+    dfs_flat_min = [merge_dataframes_helper(dfs) for dfs in dfs_dict.values()]
     return dict(zip(programs, dfs_flat_min))
 
 
@@ -392,6 +421,7 @@ def show_or_save_plot(title: str):
             os.makedirs(f'./{PLOT_IMG_DIR}')
         out_title = title.translate ({ord(c): "_" for c in " !@#$%^&*()[]{};:,./<>?\|`~-=+"})
         plt.savefig(f'./{PLOT_IMG_DIR}/{out_title}.png')
+        plt.close()
     else:
         plt.show()
 
@@ -440,7 +470,7 @@ def plot_series(names: List[str], dfs: pd.DataFrame, y_log=False):
     Plot given programs.
     """
     benchmark_subset = names_to_dfs(names, dfs)
-    plot_line(benchmark_subset, x='d', y='program_time', y_log=y_log)
+    plot_line(benchmark_subset, x='nodes', y='program_time', y_log=y_log)
 
 
 def plot_comparison(names: List[str], dfs: Dict[str, pd.DataFrame], title, pred=lambda _: True, filename=None, y_log=False):
@@ -501,6 +531,42 @@ def plot_precision_comparison(names: List[str], dfs: Dict[str, pd.DataFrame], ti
     show_or_save_plot(filename if filename is not None else title)
 
 
+def karger_full_contraction_chart(dfs):
+    karger_df = dfs[KARGER]
+    title = 'Tempo di esecuzione di full contraction rispetto al numero di nodi'
+
+    g = sns.lineplot(karger_df['nodes'], karger_df['full_contraction'], label='Full Contraction')
+    g.set(xlabel='Nodi', ylabel='Tempo (ms)')
+    g.set_yscale('log')
+
+    plt.title(title)
+    show_or_save_plot(title)
+
+
+def karger_discovery_vs_program_time_chart(dfs):
+    karger_df = dfs[KARGER]
+    title = f'Confronto tra discovery time e program time rispetto al numero di nodi'
+    
+    g = sns.lineplot(karger_df['nodes'], karger_df['discovery_time'], label='{KARGER} (Discovery Time)')
+    g = sns.lineplot(karger_df['nodes'], karger_df['program_time'], label='{KARGER} (Program Time)')
+    g.set(xlabel='Nodi', ylabel='Tempo (ms)')
+    g.set_yscale('log')
+
+    plt.title(title)
+    show_or_save_plot(title)
+
+
+def karger_min_cut_relative_error(dfs):
+    karger_df = dfs[KARGER]
+    title = f'Errore relativo dell\'output rispetto al numero di nodi'
+    
+    g = sns.barplot(karger_df['nodes'], karger_df['min_cut_error'], label='${KARGER} (Errore Relativo)')
+    g.set(xlabel='Nodi', ylabel='Errore (%)')
+    
+    plt.title(title)
+    show_or_save_plot(title)
+
+
 if __name__ == '__main__':
     if IS_HELP:
         print(__doc__)
@@ -515,21 +581,26 @@ if __name__ == '__main__':
 
     # for each CSV, only the minimum values for the 'program_time' column are retained
     # len(dataframes_min) == len(programs)
-    dataframes_min = minimize_ms_dataframes(dataframes)
+    dataframes_merge = merge_dataframes(dataframes)
 
     if IS_TABLE_ENABLED:
         # compare multiple programs to show potential improvements
-        pass
-        #print_comparison(dataframes_min, [ ... ])
+
+        # Q4: Output, Expected, Relative Error
+        print_comparison(dataframes_merge, [ KARGER ])
 
     # export minimized in-memory CSV files to LaTeX tables (they will still require some manual work tho)
-    # export_dataframes_min_to_latex(dataframes_min)
+    # export_dataframes_merge_to_latex(dataframes_merge)
 
     if IS_PLOT_ENABLED:
-        pass
-        # plot_precision_comparison(
-        #     [ ... ],
-        #     dataframes_min,
-        #     title=f'{names_to_vs([...])} (approximation error)')
 
+        # Q1: Full contraction scaling with nodes
+        karger_full_contraction_chart(dataframes_merge)
 
+        # Q3: For each dataset compare discovery time with algorithm runtime.
+        karger_discovery_vs_program_time_chart(dataframes_merge)
+        
+        # Q4: Output, Expected, Relative Error
+        # Output vs Expected should be a table
+        # Relative Error is a barplot
+        karger_min_cut_relative_error(dataframes_merge)  # all zeros!
