@@ -419,7 +419,7 @@ def show_or_save_plot(title: str):
     if IS_SAVE_PLOT_ENABLED:
         if not os.path.exists(f'./{PLOT_IMG_DIR}'):
             os.makedirs(f'./{PLOT_IMG_DIR}')
-        out_title = title.translate ({ord(c): "_" for c in " !@#$%^&*()[]{};:,./<>?\|`~-=+"})
+        out_title = title.translate ({ord(c): "_" for c in " !@#$%^&*()[]{};:,./<>?\|`~-=+\n"})
         plt.savefig(f'./{PLOT_IMG_DIR}/{out_title}.png')
         plt.close()
     else:
@@ -547,8 +547,8 @@ def karger_discovery_vs_program_time_chart(dfs):
     karger_df = dfs[KARGER]
     title = f'Confronto tra discovery time e program time rispetto al numero di nodi'
     
-    g = sns.lineplot(karger_df['nodes'], karger_df['discovery_time'], label='{KARGER} (Discovery Time)')
-    g = sns.lineplot(karger_df['nodes'], karger_df['program_time'], label='{KARGER} (Program Time)')
+    g = sns.lineplot(karger_df['nodes'], karger_df['discovery_time'], label=f'{KARGER} (Discovery Time)')
+    g = sns.lineplot(karger_df['nodes'], karger_df['program_time'], label=f'{KARGER} (Program Time)')
     g.set(xlabel='Nodi', ylabel='Tempo (ms)')
     g.set_yscale('log')
 
@@ -556,13 +556,59 @@ def karger_discovery_vs_program_time_chart(dfs):
     show_or_save_plot(title)
 
 
-def karger_min_cut_relative_error(dfs):
+def karger_relative_error(dfs):
     karger_df = dfs[KARGER]
     title = f'Errore relativo dell\'output rispetto al numero di nodi'
     
-    g = sns.barplot(karger_df['nodes'], karger_df['min_cut_error'], label='${KARGER} (Errore Relativo)')
+    g = sns.barplot(karger_df['nodes'], karger_df['min_cut_error'], label=f'${KARGER} (Errore Relativo)')
     g.set(xlabel='Nodi', ylabel='Errore (%)')
     
+    plt.title(title)
+    show_or_save_plot(title)
+
+
+def karger_def_vs_tout_running_time(dfs):
+    # create copy to avoid side effect
+    karger_def_df = dfs[KARGER].copy()
+    karger_tout_df = dfs[KARGER_TOUT].copy()
+    
+    # add a column program that represents the program name
+    karger_def_df["program"] = KARGER
+    karger_tout_df["program"] = KARGER_TOUT
+
+    # merge dataset to a single one by appending rows
+    df = karger_def_df
+    df = df.append(karger_tout_df)
+
+    # create the barplot with `hue='program'`
+    g = sns.barplot(x='nodes', y='program_time', hue='program', data=df)
+    g.set(xlabel='Nodi', ylabel='Time (ms)')
+    
+    title = f'Confronto del running time rispetto al numero di nodi per\n {KARGER} e {KARGER_TOUT}'
+
+    plt.title(title)
+    show_or_save_plot(title)
+
+
+def karger_def_vs_tout_relative_error(dfs):
+    # create copy to avoid side effect
+    karger_def_df = dfs[KARGER].copy()
+    karger_tout_df = dfs[KARGER_TOUT].copy()
+    
+    # add a column program that represents the program name
+    karger_def_df["program"] = KARGER
+    karger_tout_df["program"] = KARGER_TOUT
+
+    # merge dataset to a single one by appending rows
+    df = karger_def_df
+    df = df.append(karger_tout_df)
+
+    # create the barplot with `hue='program'`
+    g = sns.barplot(x='nodes', y='min_cut_error', hue='program', data=df)
+    g.set(xlabel='Nodi', ylabel='Errore (%)')
+    
+    title = f'Confronto dell\'errore relativo rispetto al numero di nodi per\n {KARGER} e {KARGER_TOUT}'
+
     plt.title(title)
     show_or_save_plot(title)
 
@@ -587,7 +633,7 @@ if __name__ == '__main__':
         # compare multiple programs to show potential improvements
 
         # Q4: Output, Expected, Relative Error
-        print_comparison(dataframes_merge, [ KARGER ])
+        print_comparison(dataframes_merge, [ KARGER, KARGER_TOUT ])
 
     # export minimized in-memory CSV files to LaTeX tables (they will still require some manual work tho)
     # export_dataframes_merge_to_latex(dataframes_merge)
@@ -601,6 +647,6 @@ if __name__ == '__main__':
         karger_discovery_vs_program_time_chart(dataframes_merge)
         
         # Q4: Output, Expected, Relative Error
-        # Output vs Expected should be a table
-        # Relative Error is a barplot
-        karger_min_cut_relative_error(dataframes_merge)  # all zeros!
+        karger_relative_error(dataframes_merge)  # all zeros!
+        karger_def_vs_tout_running_time(dataframes_merge)
+        karger_def_vs_tout_relative_error(dataframes_merge)
