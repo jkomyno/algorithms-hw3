@@ -47,8 +47,35 @@ Nelle istanze più grandi, il tempo di calcolo necessario a completare tutte le 
 \label{sec:question-3}
 
 \begin{displayquote}
-Misurate il \textit{discovery time} dell'algoritmo di Karger sui grafi del dataset. Il discovery time è il momento (in secondi) in cui l'algoritmo trova per la prima volta il taglio di costo mimimo.  Confrontate il discovery time con il tempo di esecuzione complessivo per ognuno dei grafi nel dataset.
+Misurate il \textit{discovery time} dell'algoritmo di Karger sui grafi
+del dataset. Il discovery time è il momento (in secondi) in cui
+l'algoritmo trova per la prima volta il taglio di costo mimimo.
+Confrontate il discovery time con il tempo di esecuzione complessivo
+per ognuno dei grafi nel dataset.
 \end{displayquote}
+
+\noindent Il grafico \ref{fig:karger-discovery-vs-program-time-chart}
+mostra un confronto per \emph{program time}, ovvero il tempo totale di
+esecuzione dell'algoritmo e \emph{discovery time}, ovvero il tempo in
+cui l'algoritmo trova il taglio di costo minimo per la prima volta.\\
+
+\noindent \'E possibile notare che per la curva \emph{discovery time}
+i risultati hanno molta varianza, ma in linea generale essa segue in modo
+asintotico quella del \emph{program time}.\\
+
+\noindent Ovviamente, come ci si può aspettare, la curva
+\emph{discovery time} è considerevolmente più bassa rispetto all'altra
+in quanto, data la scelta randomica, ``la volta fortunata'' potrebbe
+capitare anche prima della fine dell'algorimto, e anzi, spesso è così.
+
+\begin{figure}[H]
+    \centering
+
+    \includegraphics[width=0.9\textwidth]{./images/Confronto_tra_discovery_time_e_program_time_rispetto_al_numero_di_nodi.png}
+
+    \caption{Confronto tra il tempo di esecuzione per \emph{discovery time} e \emph{program time} rispetto al numero di nodi. Grafico in scala logaritmica.}
+    \label{fig:karger-discovery-vs-program-time-chart}
+\end{figure}
 
 \subsection{Domanda \#4}
 \label{sec:question-4}
