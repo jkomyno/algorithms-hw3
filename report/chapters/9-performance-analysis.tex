@@ -5,8 +5,30 @@
 \label{sec:question-1}
 
 \begin{displayquote}
-Misurate i tempi di calcolo della procedura \codeinline{full\_contraction} sui grafi del dataset. Mostrate i risultati con un grafico che mostri la variazione dei tempi di calcolo al variare del numero di vertici nel grafo. Confrontate i tempi misurati con la complessità asintotica di \codeinline{full\_contraction}.
+Misurate i tempi di calcolo della procedura
+\codeinline{full\_contraction} sui grafi del dataset. Mostrate i
+risultati con un grafico che mostri la variazione dei tempi di calcolo
+al variare del numero di vertici nel grafo. Confrontate i tempi
+misurati con la complessità asintotica di
+\codeinline{full\_contraction}.
 \end{displayquote}
+
+\noindent Il grafico \ref{fig:karger-full-contraction-chart} mostra la
+variazione dei tempi di calcolo al variare del numero dei vertici del
+grafo ed evidenzia la differenza del tempo di esecuzione pratico di
+\codeinline{full\_contraction} rispetto a quello asintotico. In
+realtà, come è possibile vedere, a meno di un certo fattore, anche se
+abbastanza significativo, le due curve hanno la stessa complessità
+asintotica.
+
+\begin{figure}[H]
+    \centering
+
+    \includegraphics[width=0.9\textwidth]{./images/Tempo_di_esecuzione_di_full_contraction_rispetto_al_numero_di_nodi.png}
+
+    \caption{Confronto tra il tempo di esecuzione di \codeinline{full\_contraction} e la sua complessità asintotica rispetto al numero di nodi. Grafico in scala logaritmica.}
+    \label{fig:karger-full-contraction-chart}
+\end{figure}
 
 \subsection{Domanda \#2}
 \label{sec:question-2}

@@ -532,10 +532,12 @@ def plot_precision_comparison(names: List[str], dfs: Dict[str, pd.DataFrame], ti
 
 
 def karger_full_contraction_chart(dfs):
-    karger_df = dfs[KARGER]
+    karger_df = dfs[KARGER].copy()
+    karger_df['full_contraction_asymptotic'] = np.square(karger_df['nodes']).astype(float)
     title = 'Tempo di esecuzione di full contraction rispetto al numero di nodi'
 
     g = sns.lineplot(karger_df['nodes'], karger_df['full_contraction'], label='Full Contraction')
+    g = sns.lineplot(karger_df['nodes'], karger_df['full_contraction_asymptotic'], label='Full Contraction (Asintotico)')
     g.set(xlabel='Nodi', ylabel='Tempo (ms)')
     g.set_yscale('log')
 
