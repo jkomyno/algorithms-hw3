@@ -81,10 +81,48 @@ capitare anche prima della fine dell'algorimto, e anzi, spesso è così.
 \label{sec:question-4}
 
 \begin{displayquote}
-Per ognuno dei grafi del dataset, riportate il risultato risultato ottenuto dalla vostra implementazione, la soluzione attesa e l'errore relativo calcolato come:
+Per ognuno dei grafi del dataset, riportate il risultato risultato
+ottenuto dalla vostra implementazione, la soluzione attesa e l'errore
+relativo calcolato come:
 
 \begin{equation*}
     \frac{SoluzioneTrovata - SoluzioneAttesa}{SoluzioneAttesa}
 \end{equation*}
 
 \end{displayquote}
+
+\noindent La nostra implementazione e la scelta del numero di
+contrazioni da eseguire non introduce nessun tipo di errore per
+l'algoritmo di Karger, quindi un grafico sarebbe poco informatico.\\
+
+\noindent Si ritiene utile invece mostrare le differenza tra
+Karger e Karger con Timeout (di seguito KargerTimeout). Il secondo
+differisce dal primo solo perché ad un certo punto l'esecuzione viene
+interrotta se l'algoritmo non è ancora terminato.\\
+
+\noindent Dal grafico \ref{fig:karger-vs-kargertout-error-chart} è
+possibile vedere che entrambi hanno bassissimo errore relativo
+sull'output, ma Karger impega un tempo considerevolmente maggiore per
+risolvere il problema, mentre KargerTimeout riesce con successo ad
+ottenere $0$ errore anche prima dello scadere del timeout. Ciò implica
+che con KargerTimeout potrebbe essere utilizzato per avere una
+soluzione approssimata entro un tempo accettabile. Quando descritto è
+mostrato nel grafico \ref{fig:karger-vs-kargertout-runtime-chart}.
+
+\begin{figure}[H]
+    \centering
+
+    \includegraphics[width=0.9\textwidth]{./images/Confronto_dell'errore_relativo_rispetto_al_numero_di_nodi_per__KargerMinCut_e_KargerMinCutTimeout.png}
+
+    \caption{Confronto dell'errore relativo rispetto al numero di nodi per Karger e Karger con Timeout.}
+    \label{fig:karger-vs-kargertout-error-chart}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+
+    \includegraphics[width=0.9\textwidth]{./images/Confronto_del_running_time_rispetto_al_numero_di_nodi_per__KargerMinCut_e_KargerMinCutTimeout.png}
+
+    \caption{Confronto del running time rispetto al numero di nodi per Karger e Karger con Timeout.}
+    \label{fig:karger-vs-kargertout-runtime-chart}
+\end{figure}
