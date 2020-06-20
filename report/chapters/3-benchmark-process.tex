@@ -31,9 +31,9 @@ Gli script \codeinline{run.sh} e \codeinline{runall.sh} e lo script Python \code
     \item \codeinline{run.sh} legge ogni grafo di input dalla cartella \codeinline{dataset}. Esso esegue l'algoritmo desiderato passando l'output allo script \codeinline{process.py} tramite \codeinline{pipe} ($\vert$). Questo file si occupa inoltre di estrarre il numero di nodi dal nome del file e di confrontare l'output del programma con la soluzione attesa del grafo di input.
     \item \codeinline{process.py} legge l'output del programma descritto nella sezione \ref{sub:output} e redirige a \codeinline{stdout} la corrispondente linea del file CSV da generare.
 \end{itemize}
- 
+
 \subsection{Analisi}
- 
+
 \noindent Lo script Python \codeinline{benchmark/analysis.py} è invece usato per analizzare i file CSV generati i grafici e le tabelle informative usate in questa relazione.
 
 \noindent Lo script trasforma i dati grezzi in dati manipolabili e li

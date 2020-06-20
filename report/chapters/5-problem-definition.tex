@@ -1,8 +1,11 @@
 \section{Definizione del problema minimum-cut}
 \label{cap:problem-definition}
 
-Nella teoria dei grafi, un \emph{minimum cut} di $G$ è un taglio
-minimo rispetto a quelche nozione di distanza tra tagli.
+% Nella teoria dei grafi, un \emph{minimum cut} di $G$ è un taglio
+% minimo rispetto a quelche nozione di distanza tra tagli.
+
+
+
 
 \begin{defn}{\emph{(Taglio)}}
   Dato $G = (V,E)$ non diretto, connesso, con $n$ vertici e $m$ lati;
@@ -10,17 +13,11 @@ minimo rispetto a quelche nozione di distanza tra tagli.
   (V, E \setminus C)$ non è connesso.
 \end{defn}
 
-\noindent Come corollario ottiniamo che il grafo $G'$ deve avere
-almeno due componenti connesse, e nel nostro caso ci interessa
-ottenere esattamente due compoenenti connesse. Inoltre, la definizione
-può essere facilmente estesa al caso di grafi pesati, diretti e anche
-multigrafi.\\
+\noindent Un taglio è dunque una partizione dei vertici di un grafo in due insiemi disgiunti. Dalla definizione è immediato osservare che $G'$ deve avere
+almeno due componenti connesse; nel nostro caso ci interessa
+ottenere esattamente due componenti connesse. \\
 
-\noindent In particolare, siamo interessati nel problema del calcolo
-del \textit{minimum cut}, e la nozione di distanza utilizzata è quella
-della cardinalità del taglio. \\
-Formalmente, il minimum cut è un taglio $C \subseteq E$ tale che $\mid
-C \mid$ sia minima.\\
+\noindent Siamo interessati al calcolo del \textit{minimum cut}, che nel caso dei grafi non diretti e non pesati è il taglio di cardinalità minima nel grafo. Formalmente, il minimum cut è un taglio $C \subseteq E$ che minimizza $\abs{C}$.\\
 
 \noindent In letteratura, il problema è formalizzato in due modi:
 
@@ -32,11 +29,7 @@ C \mid$ sia minima.\\
 \end{itemize}
 
 \noindent In questo homework affronteremo solo il \textit{global
-  min-cut problem}. \\
-
-\noindent Trovare un minimum cut in un grafo è un problema rilevante e
-un algoritmo in grado di farlo è richiesto ed utilizzato in molteplici
-applicazioni, ad esempio:
+  min-cut problem}. Questo tipo di problema ha numerose applicazioni, come ad esempio:
 
 \begin{itemize}
     \item determinare la solidità del design di una rete di

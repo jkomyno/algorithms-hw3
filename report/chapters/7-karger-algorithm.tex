@@ -34,11 +34,11 @@ auto full_contraction(const std::shared_ptr<AdjacencyMapGraph>& graph) noexcept 
   while (graph_copy->size() > 2) {
     // Step b
     const auto [u, v] = graph_copy->get_random_edge();
-    
+
     // Step c
     graph_copy->contract(u, v);
   }
-  
+
   // Step e
   return graph_copy;
 }
@@ -47,16 +47,16 @@ auto full_contraction(const std::shared_ptr<AdjacencyMapGraph>& graph) noexcept 
 size_t karger(const std::shared_ptr<AdjacencyMapGraph>& graph, size_t k) noexcept {
   // Step 1
   size_t min_cut = std::numeric_limits<size_t>::max();
-  
+
   for (size_t i = 0; i < k; ++i) {
     // Step 2
     const auto contracted_graph = full_contraction(graph);
     const size_t cut = contracted_graph->edge_size();
-    
+
     // Step 3
     min_cut = std::min(min_cut, cut);
   }
-  
+
   // Step 4
   return min_cut
 }
@@ -71,7 +71,7 @@ size_t karger(const std::shared_ptr<AdjacencyMapGraph>& graph, size_t k) noexcep
 
 \begin{itemize}
     \item La funzione \codeinline{full\_contraction} è definita nella cartella \codeinline{Shared} perché la sua implementazione è riutilizzata anche dell'algoritmo di Karger \& Stein.
-    \item 
+    \item
 \end{itemize}
 
 \subsection{Contrazione del grafo}
