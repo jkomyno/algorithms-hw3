@@ -262,28 +262,19 @@ def compare_2_programs(dfs_dict: Dict[str, pd.DataFrame], program_1: str, progra
 
 def compare_n_programs(dfs_dict: Dict[str, pd.DataFrame], programs: List[str]):
 
-    # df = GROUND_TRUTH_DF
     df = pd.DataFrame()
 
+    headers = False
+
     for program in programs:
-        data = dfs_dict[program][['filename', 'expected_min_cut', 'min_cut', 'min_cut_error']]
 
-        # data = data[['output', 'program_time']]
-        # data['error'] = calculate_error(df['exact'].tolist(), data['output'].tolist())
+        if not headers:
+            data = dfs_dict[program][['filename', 'nodes']]
+            df = pd.concat([df, data], axis=1, sort=False)
+            headers = True
 
-        # # https://stackoverflow.com/questions/17985159/creating-dataframe-with-hierarchical-columns
-        # # is not working when pretty printed.
+        data = dfs_dict[program][['discovery_time', 'program_time']]
         df = pd.concat([df, data], axis=1, sort=False)
-
-    # df = df.sort_values('d')
-    # df = df.drop('d', axis=1)
-    # df = df.rename(columns={
-    #     'instance': 'Instance',
-    #     'exact': 'Exact',
-    #     'output':'Solution',
-    #     'program_time': 'Time (ms)',
-    #     'error': 'Error (%)'
-    # })
 
     return df
 
@@ -637,8 +628,9 @@ if __name__ == '__main__':
     if IS_TABLE_ENABLED:
         # compare multiple programs to show potential improvements
 
-        # Q4: Output, Expected, Relative Error
-        print_comparison(dataframes_merge, [ KARGER, KARGER_TOUT ])
+        # Appendix: Karger vs KargerTimeout running time (program vs discovery time)
+        print_comparison(dataframes_merge, [ KARGER ])
+        print_comparison(dataframes_merge, [ KARGER_TOUT ])
 
     # export minimized in-memory CSV files to LaTeX tables (they will still require some manual work tho)
     # export_dataframes_merge_to_latex(dataframes_merge)
