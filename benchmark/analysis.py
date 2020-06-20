@@ -609,6 +609,32 @@ def karger_def_vs_tout_relative_error(dfs):
     show_or_save_plot(title)
 
 
+def karger_discovery_iter_vs_estimated(dfs):
+    karger_df = dfs[KARGER].copy()
+    
+    # Add estimated_discovery_iteration column (see documentation report, Question 2)
+    # with the formula
+    #     (1)    k = 1 * (n^2 / 2) * ln(n)
+
+    n = karger_df['nodes'].astype(np.double)  # nodes number as double
+    k = np.square(n) / 2 * np.log(n)          # applying formula (1)
+    k = np.ceil(k)                            # round to ceil
+    k = k.astype(np.double)                   # result to double
+
+    karger_df['estimated_discovery_iteration'] = k
+
+    # plot the result
+    g = sns.lineplot(karger_df['nodes'], karger_df['discovery_iteration'], label=f'{KARGER} (Discovery Iteration)')
+    g = sns.lineplot(karger_df['nodes'], karger_df['estimated_discovery_iteration'], label=f'{KARGER} (Estimated Discovery Iteration)')
+    g.set(xlabel='Nodi', ylabel='Discovery Iteration')
+    g.set_yscale('log')
+
+    title = f'Confronto Discovery Iteration stimata vs attuale\n rispetto al numero di nodi per {KARGER}'
+
+    plt.title(title)
+    show_or_save_plot(title)
+    
+
 if __name__ == '__main__':
     if IS_HELP:
         print(__doc__)
@@ -639,6 +665,9 @@ if __name__ == '__main__':
 
         # Q1: Full contraction scaling with nodes
         karger_full_contraction_chart(dataframes_merge)
+
+        # Q2: Estimated discovery iter
+        karger_discovery_iter_vs_estimated(dataframes_merge)
 
         # Q3: For each dataset compare discovery time with algorithm runtime.
         karger_discovery_vs_program_time_chart(dataframes_merge)
