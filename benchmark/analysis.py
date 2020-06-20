@@ -546,12 +546,15 @@ def karger_full_contraction_chart(dfs):
 
 
 def karger_discovery_vs_program_time_chart(dfs):
-    karger_df = dfs[KARGER]
+    karger_df = dfs[KARGER].copy()
     title = f'Confronto tra discovery time e program time rispetto al numero di nodi'
+
+    karger_df['program_time'] = karger_df['program_time'] / 1000.0  # to seconds
+    karger_df['discovery_time'] = karger_df['discovery_time'] / 1000.0  # to seconds
     
     g = sns.lineplot(karger_df['nodes'], karger_df['discovery_time'], label=f'{KARGER} (Discovery Time)')
     g = sns.lineplot(karger_df['nodes'], karger_df['program_time'], label=f'{KARGER} (Program Time)')
-    g.set(xlabel='Nodi', ylabel='Tempo (ms)')
+    g.set(xlabel='Nodi', ylabel='Tempo (s)')
     g.set_yscale('log')
 
     plt.title(title)
@@ -559,7 +562,7 @@ def karger_discovery_vs_program_time_chart(dfs):
 
 
 def karger_relative_error(dfs):
-    karger_df = dfs[KARGER]
+    karger_df = dfs[KARGER].copy()
     title = f'Errore relativo dell\'output rispetto al numero di nodi'
     
     g = sns.barplot(karger_df['nodes'], karger_df['min_cut_error'], label=f'${KARGER} (Errore Relativo)')
