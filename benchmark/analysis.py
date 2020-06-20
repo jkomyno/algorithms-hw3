@@ -332,14 +332,14 @@ def merge_dataframes_helper(dfs: List[pd.DataFrame]) -> pd.DataFrame:
     :return: new DataFrame merged row-wise
     """
     columns = ['filename', 'nodes', 'k', 'expected_min_cut', 'min_cut', 'program_time', 'discovery_time', 
-               'full_contraction', 'min_cut_error' ]  # TODO: add missing columns
+               'full_contraction', 'min_cut_error' ]
     merged_df = pd.DataFrame(columns=columns)
 
     n_rows = dfs[0].shape[0]
     for row in range(n_rows):
         row_index = 0  # arbitrarily choosing first row
-        program_time = get_mean_at_row(dfs, row, column='program_time')
-        discovery_time = get_mean_at_row(dfs, row, column='discovery_time')
+        program_time = get_mean_at_row(dfs, row, column='program_time') / 1000.0
+        discovery_time = get_mean_at_row(dfs, row, column='discovery_time') / 1000.0
         discovery_iteration = get_median_at_row(dfs, row, column='discovery_iteration')
         full_contraction = get_mean_at_row(dfs, row, column='full_contraction')
 
