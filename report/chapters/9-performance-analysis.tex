@@ -74,8 +74,9 @@ mostra un confronto per \emph{program time}, ovvero il tempo totale di
 esecuzione dell'algoritmo e \emph{discovery time}, ovvero il tempo in
 cui l'algoritmo trova il taglio di costo minimo per la prima volta.\\
 
-\noindent È possibile notare che per la curva di \emph{discovery time} i risultati hanno molta varianza, ma in linea generale essa segue in modo
-asintotico quella del \emph{program time}.\\
+\noindent È possibile notare che per la curva di \emph{discovery time}
+i risultati hanno molta varianza, ma in linea generale essa segue in
+modo asintotico quella del \emph{program time}.\\
 
 \noindent Ovviamente, come ci si può aspettare, la curva
 \emph{discovery time} è considerevolmente più bassa rispetto all'altra
@@ -109,21 +110,17 @@ relativo calcolato come:
 contrazioni da eseguire non introduce nessun tipo di errore per
 l'algoritmo di Karger, quindi un grafico sarebbe poco informatico.\\
 
-TODO: rinominare KargerTimeout in KargerMinCutTimeout
-TODO: mostrare la tabella di KargerMinCutTimeout, con colonne \textbf{istanza}, \textbf{nodi}, \textbf{soluzione attesa}, \textbf{min-cut}.
-Le righe devono essere ordinate per istanza e numero crescente di nodi. \\
-
 \noindent Si ritiene utile invece mostrare le differenza tra
-Karger e Karger con Timeout (di seguito KargerTimeout). Il secondo
+Karger e Karger con Timeout (di seguito KargerMinCutTimeout). Il secondo
 differisce dal primo solo perché ad un certo punto l'esecuzione viene
 interrotta se l'algoritmo non è ancora terminato.\\
 
 \noindent Dal grafico \ref{fig:karger-vs-kargertout-error-chart} è
 possibile vedere che entrambi hanno bassissimo errore relativo
 sull'output, ma Karger impega un tempo considerevolmente maggiore per
-risolvere il problema, mentre KargerTimeout riesce con successo ad
+risolvere il problema, mentre KargerMinCutTimeout riesce con successo ad
 ottenere $0$ errore anche prima dello scadere del timeout. Ciò implica
-che con KargerTimeout potrebbe essere utilizzato per avere una
+che con KargerMinCutTimeout potrebbe essere utilizzato per avere una
 soluzione approssimata entro un tempo accettabile. Quando descritto è
 mostrato nel grafico \ref{fig:karger-vs-kargertout-runtime-chart}.
 
