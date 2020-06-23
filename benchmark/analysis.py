@@ -531,7 +531,7 @@ def karger_full_contraction_chart(dfs):
     title = 'Tempo di esecuzione di full contraction rispetto al numero di nodi'
 
     g = sns.lineplot(karger_df['nodes'], karger_df['full_contraction'], label='Full Contraction')
-    g = sns.lineplot(karger_df['nodes'], karger_df['full_contraction_asymptotic'], label='Full Contraction (Asintotico)')
+    g = sns.lineplot(karger_df['nodes'], karger_df['full_contraction_asymptotic'], label='Full Contraction (Asintocio: n^2)')
     g.set(xlabel='Nodi', ylabel='Tempo (ms)')
     g.set_yscale('log')
 
