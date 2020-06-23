@@ -611,21 +611,9 @@ def karger_def_vs_tout_relative_error(dfs):
 
 def karger_discovery_iter_vs_estimated(dfs):
     karger_df = dfs[KARGER].copy()
-    
-    # Add estimated_discovery_iteration column (see documentation report, Question 2)
-    # with the formula
-    #     (1)    k = 1 * (n^2 / 2) * ln(n)
 
-    n = karger_df['nodes'].astype(np.double)  # nodes number as double
-    k = np.square(n) / 2 * np.log(n)          # applying formula (1)
-    k = np.ceil(k)                            # round to ceil
-    k = k.astype(np.double)                   # result to double
-
-    karger_df['estimated_discovery_iteration'] = k
-
-    # plot the result
     g = sns.lineplot(karger_df['nodes'], karger_df['discovery_iteration'], label=f'{KARGER} (Discovery Iteration)')
-    g = sns.lineplot(karger_df['nodes'], karger_df['estimated_discovery_iteration'], label=f'{KARGER} (Estimated Discovery Iteration)')
+    g = sns.lineplot(karger_df['nodes'], karger_df['k'].astype(np.double), label=f'{KARGER} (K)')
     g.set(xlabel='Nodi', ylabel='Discovery Iteration')
     g.set_yscale('log')
 
