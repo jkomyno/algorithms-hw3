@@ -335,7 +335,7 @@ def merge_dataframes_helper(dfs: List[pd.DataFrame]) -> pd.DataFrame:
         program_time = get_mean_at_row(dfs, row, column='program_time') / 1000.0
         discovery_time = get_mean_at_row(dfs, row, column='discovery_time') / 1000.0
         discovery_iteration = get_median_at_row(dfs, row, column='discovery_iteration')
-        full_contraction = get_mean_at_row(dfs, row, column='full_contraction')
+        full_contraction = get_mean_at_row(dfs, row, column='full_contraction') / 1000.0
 
         data = dfs[row_index].loc[row].copy()  # need to copy to avoid side effect on original dataframe.
 
