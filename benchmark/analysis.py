@@ -275,6 +275,9 @@ def compare_n_programs(dfs_dict: Dict[str, pd.DataFrame], programs: List[str]):
 
         data = dfs_dict[program][['discovery_time', 'program_time']]
         df = pd.concat([df, data], axis=1, sort=False)
+    
+    # sort by nodes and then by instances
+    df = df.sort_values(by=['nodes', 'filename'])
 
     return df
 
