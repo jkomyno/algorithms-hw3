@@ -624,7 +624,30 @@ def karger_discovery_iter_vs_estimated(dfs):
 
     plt.title(title)
     show_or_save_plot(title)
+
+
+def karger_runtime(dfs):
+    karger_df = dfs[KARGER].copy()
+
+    # add estimated runtime
+    n = karger_df['nodes'].astype(np.double)
+    r = (n ** 4) * np.log(n)
+
+    # save it in the dataframe
+    karger_df['estimated_program_time'] = r
+
+    # plot the result
+    g = sns.lineplot(karger_df['nodes'], karger_df['program_time'], label=f'{KARGER} (Runtime)')
+    g = sns.lineplot(karger_df['nodes'], karger_df['estimated_program_time'], label=f'{KARGER} (Asintotico: n^4 log(n))')
+    g.set(xlabel='Nodi', ylabel='Tempo (ms)')
+    g.set_yscale('log')
+
+    title = f'Tempo di esecuzione attuale e asintotico\n rispetto al numero di nodi per {KARGER}'
+
+    plt.title(title)
+    show_or_save_plot(title)
     
+
 
 if __name__ == '__main__':
     if IS_HELP:
@@ -662,10 +685,11 @@ if __name__ == '__main__':
         karger_full_contraction_chart(dataframes_merge)
 
         # Q2: Estimated discovery iter
-        karger_discovery_iter_vs_estimated(dataframes_merge)
+        karger_runtime(dataframes_merge)
 
         # Q3: For each dataset compare discovery time with algorithm runtime.
         karger_discovery_vs_program_time_chart(dataframes_merge)
+        karger_discovery_iter_vs_estimated(dataframes_merge)
         
         # Q4: Output, Expected, Relative Error
         karger_relative_error(dataframes_merge)  # all zeros!

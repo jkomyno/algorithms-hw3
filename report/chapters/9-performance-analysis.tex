@@ -53,6 +53,19 @@ conseguenza ricavare k con la formula vista nella sezione
 \ref{sub:karger-success-probability} e quindi:
 $$ k = 1 * \frac{n^2}{2} * ln(n)$$
 
+\noindent Il grafico \ref{fig:karger-runtime-chart} mostra il tempo di
+calcolo dell'algoritmo di Karger e lo confronta con il tempo
+asintotico rispetto al numero di nodi.
+
+\begin{figure}[H]
+    \centering
+
+    \includegraphics[width=0.9\textwidth]{./images/Tempo_di_esecuzione_attuale_e_asintotico__rispetto_al_numero_di_nodi_per_KargerMinCut.png}
+
+    \caption{Tempo di esecuzione attuale e asintotico per KargerMinCut rispetto al numero di nodi. Grafico in scala logaritmica.}
+    \label{fig:karger-runtime-chart}
+\end{figure}
+
 \subsection{Domanda \#3}
 \label{sec:question-3}
 
@@ -94,7 +107,7 @@ Il grafico \ref{fig:karger-discovery-vs-estimated-k-chart} invece
 illustra una comparativa tra il numero di iterazioni tramite le quali
 si trova il min cut e il numero di iterazioni $k$ stimato.
 
-\begin{figure}[H]
+\begin{figure}[!ht]
     \centering
 
     \includegraphics[width=0.9\textwidth]{./images/Confronto_Discovery_Iteration_stimata_vs_attuale__rispetto_al_numero_di_nodi_per_KargerMinCut.png}
