@@ -676,6 +676,9 @@ if __name__ == '__main__':
         print_comparison(dataframes_merge, [ KARGER ], ['min_cut', 'expected_min_cut', 'min_cut_error'])
         print_comparison(dataframes_merge, [ KARGER_TOUT ], ['min_cut', 'expected_min_cut', 'min_cut_error'])
 
+        # Appendix: full contraction statistics
+        print_comparison(dataframes_merge, [ KARGER ], ['program_time', 'full_contraction'])
+
     # export minimized in-memory CSV files to LaTeX tables (they will still require some manual work tho)
     # export_dataframes_merge_to_latex(dataframes_merge)
 
