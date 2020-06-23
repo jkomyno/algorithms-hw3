@@ -19,7 +19,10 @@ grafo ed evidenzia la differenza del tempo di esecuzione pratico di
 \codeinline{full\_contraction} rispetto a quello asintotico. In
 realtà, come è possibile vedere, a meno di un certo fattore, anche se
 abbastanza significativo, le due curve hanno la stessa complessità
-asintotica.
+asintotica.\\
+
+\noindent La tabella \ref{table:karger-full-contraction} mostra invece
+un dettaglio di quanto illustrato dal grafico.
 
 \begin{figure}[H]
     \centering
@@ -53,6 +56,19 @@ conseguenza ricavare k con la formula vista nella sezione
 \ref{sub:karger-success-probability} e quindi:
 $$ k = 1 * \frac{n^2}{2} * ln(n)$$
 
+\noindent Il grafico \ref{fig:karger-runtime-chart} mostra il tempo di
+calcolo dell'algoritmo di Karger e lo confronta con il tempo
+asintotico rispetto al numero di nodi.
+
+\begin{figure}[H]
+    \centering
+
+    \includegraphics[width=0.9\textwidth]{./images/Tempo_di_esecuzione_attuale_e_asintotico__rispetto_al_numero_di_nodi_per_KargerMinCut.png}
+
+    \caption{Tempo di esecuzione attuale e asintotico per KargerMinCut rispetto al numero di nodi. Grafico in scala logaritmica.}
+    \label{fig:karger-runtime-chart}
+\end{figure}
+
 \subsection{Domanda \#3}
 \label{sec:question-3}
 
@@ -64,18 +80,17 @@ Confrontate il discovery time con il tempo di esecuzione complessivo
 per ognuno dei grafi nel dataset.
 \end{displayquote}
 
-TODO: il grafico deve mostrare il tempo in secondi.
-TODO: mostrare il confronto tra iterazione del discovery time e numero di iterazioni k stimate.
-TODO: mostrare la tabella dei tempi di esecuzione sia di KargerMinCut che di KargerMinCutTimeout, con colonne \textbf{istanza}, \textbf{nodi}, \textbf{discovery time}, \textbf{program time}.
-Le righe devono essere ordinate per istanza e numero crescente di nodi. \\
-
 \noindent Il grafico \ref{fig:karger-discovery-vs-program-time-chart}
-mostra un confronto per \emph{program time}, ovvero il tempo totale di
+mostra un confronto per il \emph{runtime}, ovvero il tempo totale di
 esecuzione dell'algoritmo e \emph{discovery time}, ovvero il tempo in
-cui l'algoritmo trova il taglio di costo minimo per la prima volta.\\
+cui l'algoritmo trova il taglio di costo minimo per la prima volta.
+Le tabelle \ref{table:karger-running-time} e
+\ref{table:kargertimeout-running-time} mostrano il dettaglio dei
+dati. \\
 
-\noindent È possibile notare che per la curva di \emph{discovery time} i risultati hanno molta varianza, ma in linea generale essa segue in modo
-asintotico quella del \emph{program time}.\\
+\noindent È possibile notare che per la curva di \emph{discovery time}
+i risultati hanno molta varianza, ma in linea generale essa segue in
+modo asintotico quella del \emph{runtime}.\\
 
 \noindent Ovviamente, come ci si può aspettare, la curva
 \emph{discovery time} è considerevolmente più bassa rispetto all'altra
@@ -85,10 +100,23 @@ capitare anche prima della fine dell'algorimto, e anzi, spesso è così.
 \begin{figure}[H]
     \centering
 
-    \includegraphics[width=0.9\textwidth]{./images/Confronto_tra_discovery_time_e_program_time_rispetto_al_numero_di_nodi.png}
+    \includegraphics[width=0.9\textwidth]{./images/Confronto_tra_discovery_time_e_runtime_rispetto_al_numero_di_nodi.png}
 
-    \caption{Confronto tra il tempo di esecuzione per \emph{discovery time} e \emph{program time} rispetto al numero di nodi. Grafico in scala logaritmica.}
+    \caption{Confronto tra il tempo di esecuzione per \emph{discovery time} e \emph{runtime} rispetto al numero di nodi. Grafico in scala logaritmica.}
     \label{fig:karger-discovery-vs-program-time-chart}
+\end{figure}
+
+Il grafico \ref{fig:karger-discovery-vs-estimated-k-chart} invece
+illustra una comparativa tra il numero di iterazioni tramite le quali
+si trova il min cut e il numero di iterazioni $k$ stimato.
+
+\begin{figure}[!ht]
+    \centering
+
+    \includegraphics[width=0.9\textwidth]{./images/Confronto_Discovery_Iteration_stimata_vs_attuale__rispetto_al_numero_di_nodi_per_KargerMinCut.png}
+
+    \caption{Confronto discovery iteration stimata vs ottenuta rispetto al numero di nodi per KargerMinCut. Grafico in scala logaritmica.}
+    \label{fig:karger-discovery-vs-estimated-k-chart}
 \end{figure}
 
 \subsection{Domanda \#4}
@@ -109,23 +137,21 @@ relativo calcolato come:
 contrazioni da eseguire non introduce nessun tipo di errore per
 l'algoritmo di Karger, quindi un grafico sarebbe poco informatico.\\
 
-TODO: rinominare KargerTimeout in KargerMinCutTimeout
-TODO: mostrare la tabella di KargerMinCutTimeout, con colonne \textbf{istanza}, \textbf{nodi}, \textbf{soluzione attesa}, \textbf{min-cut}.
-Le righe devono essere ordinate per istanza e numero crescente di nodi. \\
-
 \noindent Si ritiene utile invece mostrare le differenza tra
-Karger e Karger con Timeout (di seguito KargerTimeout). Il secondo
+Karger e Karger con Timeout (di seguito KargerMinCutTimeout). Il secondo
 differisce dal primo solo perché ad un certo punto l'esecuzione viene
 interrotta se l'algoritmo non è ancora terminato.\\
 
-\noindent Dal grafico \ref{fig:karger-vs-kargertout-error-chart} è
-possibile vedere che entrambi hanno bassissimo errore relativo
-sull'output, ma Karger impega un tempo considerevolmente maggiore per
-risolvere il problema, mentre KargerTimeout riesce con successo ad
-ottenere $0$ errore anche prima dello scadere del timeout. Ciò implica
-che con KargerTimeout potrebbe essere utilizzato per avere una
-soluzione approssimata entro un tempo accettabile. Quando descritto è
-mostrato nel grafico \ref{fig:karger-vs-kargertout-runtime-chart}.
+\noindent Dal grafico \ref{fig:karger-vs-kargertout-error-chart} e dal
+dettaglio riportato nelle tabelle \ref{table:karger-approx-error} e
+\ref{table:kargertimeout-approx-error} è possibile vedere che entrambi
+hanno bassissimo errore relativo sull'output, ma Karger impega un
+tempo considerevolmente maggiore per risolvere il problema, mentre
+KargerMinCutTimeout riesce con successo ad ottenere zero errore anche
+prima dello scadere del timeout. Ciò implica che con
+KargerMinCutTimeout potrebbe essere utilizzato per avere una soluzione
+approssimata entro un tempo accettabile. Quanto descritto è mostrato
+nel grafico \ref{fig:karger-vs-kargertout-runtime-chart}.
 
 \begin{figure}[H]
     \centering

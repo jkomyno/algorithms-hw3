@@ -260,30 +260,24 @@ def compare_2_programs(dfs_dict: Dict[str, pd.DataFrame], program_1: str, progra
     return pd.DataFrame(data, columns=['', *columns])
 
 
-def compare_n_programs(dfs_dict: Dict[str, pd.DataFrame], programs: List[str]):
+def compare_n_programs(dfs_dict: Dict[str, pd.DataFrame], programs: List[str], columns: List[str]):
 
-    # df = GROUND_TRUTH_DF
     df = pd.DataFrame()
 
+    headers = False
+
     for program in programs:
-        data = dfs_dict[program][['filename', 'expected_min_cut', 'min_cut', 'min_cut_error']]
 
-        # data = data[['output', 'program_time']]
-        # data['error'] = calculate_error(df['exact'].tolist(), data['output'].tolist())
+        if not headers:
+            data = dfs_dict[program][['filename', 'nodes']]
+            df = pd.concat([df, data], axis=1, sort=False)
+            headers = True
 
-        # # https://stackoverflow.com/questions/17985159/creating-dataframe-with-hierarchical-columns
-        # # is not working when pretty printed.
+        data = dfs_dict[program][columns]
         df = pd.concat([df, data], axis=1, sort=False)
-
-    # df = df.sort_values('d')
-    # df = df.drop('d', axis=1)
-    # df = df.rename(columns={
-    #     'instance': 'Instance',
-    #     'exact': 'Exact',
-    #     'output':'Solution',
-    #     'program_time': 'Time (ms)',
-    #     'error': 'Error (%)'
-    # })
+    
+    # sort by nodes and then by instances
+    df = df.sort_values(by=['nodes', 'filename'])
 
     return df
 
@@ -304,10 +298,10 @@ def print_comparison_time(dfs_dict: Dict[str, pd.DataFrame], programs: List[str]
     pretty_print_pandas(df_comparison)
 
 
-def print_comparison(dfs_dict: Dict[str, pd.DataFrame], programs: List[str]):
+def print_comparison(dfs_dict: Dict[str, pd.DataFrame], programs: List[str], columns: List[str]):
     print(f'Comparison {names_to_vs(programs)}.')
 
-    df_comparison = compare_n_programs(dfs_dict, programs)
+    df_comparison = compare_n_programs(dfs_dict, programs, columns)
     pretty_print_pandas(df_comparison)
 
 
@@ -332,16 +326,16 @@ def merge_dataframes_helper(dfs: List[pd.DataFrame]) -> pd.DataFrame:
     :return: new DataFrame merged row-wise
     """
     columns = ['filename', 'nodes', 'k', 'expected_min_cut', 'min_cut', 'program_time', 'discovery_time', 
-               'full_contraction', 'min_cut_error' ]  # TODO: add missing columns
+               'discovery_iteration', 'full_contraction', 'min_cut_error' ]
     merged_df = pd.DataFrame(columns=columns)
 
     n_rows = dfs[0].shape[0]
     for row in range(n_rows):
         row_index = 0  # arbitrarily choosing first row
-        program_time = get_mean_at_row(dfs, row, column='program_time')
-        discovery_time = get_mean_at_row(dfs, row, column='discovery_time')
+        program_time = get_mean_at_row(dfs, row, column='program_time') / 1000.0
+        discovery_time = get_mean_at_row(dfs, row, column='discovery_time') / 1000.0
         discovery_iteration = get_median_at_row(dfs, row, column='discovery_iteration')
-        full_contraction = get_mean_at_row(dfs, row, column='full_contraction')
+        full_contraction = get_mean_at_row(dfs, row, column='full_contraction') / 1000.0
 
         data = dfs[row_index].loc[row].copy()  # need to copy to avoid side effect on original dataframe.
 
@@ -537,7 +531,7 @@ def karger_full_contraction_chart(dfs):
     title = 'Tempo di esecuzione di full contraction rispetto al numero di nodi'
 
     g = sns.lineplot(karger_df['nodes'], karger_df['full_contraction'], label='Full Contraction')
-    g = sns.lineplot(karger_df['nodes'], karger_df['full_contraction_asymptotic'], label='Full Contraction (Asintotico)')
+    g = sns.lineplot(karger_df['nodes'], karger_df['full_contraction_asymptotic'], label='Full Contraction (Asintocio: n^2)')
     g.set(xlabel='Nodi', ylabel='Tempo (ms)')
     g.set_yscale('log')
 
@@ -546,12 +540,15 @@ def karger_full_contraction_chart(dfs):
 
 
 def karger_discovery_vs_program_time_chart(dfs):
-    karger_df = dfs[KARGER]
-    title = f'Confronto tra discovery time e program time rispetto al numero di nodi'
+    karger_df = dfs[KARGER].copy()
+    title = f'Confronto tra discovery time e runtime rispetto al numero di nodi'
+
+    karger_df['program_time'] = karger_df['program_time'] / 1000.0  # to seconds
+    karger_df['discovery_time'] = karger_df['discovery_time'] / 1000.0  # to seconds
     
     g = sns.lineplot(karger_df['nodes'], karger_df['discovery_time'], label=f'{KARGER} (Discovery Time)')
-    g = sns.lineplot(karger_df['nodes'], karger_df['program_time'], label=f'{KARGER} (Program Time)')
-    g.set(xlabel='Nodi', ylabel='Tempo (ms)')
+    g = sns.lineplot(karger_df['nodes'], karger_df['program_time'], label=f'{KARGER} (Runtime)')
+    g.set(xlabel='Nodi', ylabel='Tempo (s)')
     g.set_yscale('log')
 
     plt.title(title)
@@ -559,7 +556,7 @@ def karger_discovery_vs_program_time_chart(dfs):
 
 
 def karger_relative_error(dfs):
-    karger_df = dfs[KARGER]
+    karger_df = dfs[KARGER].copy()
     title = f'Errore relativo dell\'output rispetto al numero di nodi'
     
     g = sns.barplot(karger_df['nodes'], karger_df['min_cut_error'], label=f'${KARGER} (Errore Relativo)')
@@ -615,6 +612,43 @@ def karger_def_vs_tout_relative_error(dfs):
     show_or_save_plot(title)
 
 
+def karger_discovery_iter_vs_estimated(dfs):
+    karger_df = dfs[KARGER].copy()
+
+    g = sns.lineplot(karger_df['nodes'], karger_df['discovery_iteration'], label=f'{KARGER} (Discovery Iteration)')
+    g = sns.lineplot(karger_df['nodes'], karger_df['k'].astype(np.double), label=f'{KARGER} (K)')
+    g.set(xlabel='Nodi', ylabel='Discovery Iteration')
+    g.set_yscale('log')
+
+    title = f'Confronto Discovery Iteration stimata vs attuale\n rispetto al numero di nodi per {KARGER}'
+
+    plt.title(title)
+    show_or_save_plot(title)
+
+
+def karger_runtime(dfs):
+    karger_df = dfs[KARGER].copy()
+
+    # add estimated runtime
+    n = karger_df['nodes'].astype(np.double)
+    r = (n ** 4) * np.log(n)
+
+    # save it in the dataframe
+    karger_df['estimated_program_time'] = r
+
+    # plot the result
+    g = sns.lineplot(karger_df['nodes'], karger_df['program_time'], label=f'{KARGER} (Runtime)')
+    g = sns.lineplot(karger_df['nodes'], karger_df['estimated_program_time'], label=f'{KARGER} (Asintotico: n^4 log(n))')
+    g.set(xlabel='Nodi', ylabel='Tempo (ms)')
+    g.set_yscale('log')
+
+    title = f'Tempo di esecuzione attuale e asintotico\n rispetto al numero di nodi per {KARGER}'
+
+    plt.title(title)
+    show_or_save_plot(title)
+    
+
+
 if __name__ == '__main__':
     if IS_HELP:
         print(__doc__)
@@ -634,8 +668,16 @@ if __name__ == '__main__':
     if IS_TABLE_ENABLED:
         # compare multiple programs to show potential improvements
 
-        # Q4: Output, Expected, Relative Error
-        print_comparison(dataframes_merge, [ KARGER, KARGER_TOUT ])
+        # Appendix (runtime): Karger vs KargerTimeout running time (program vs discovery time)
+        print_comparison(dataframes_merge, [ KARGER ], ['discovery_time', 'program_time'])
+        print_comparison(dataframes_merge, [ KARGER_TOUT ], ['discovery_time', 'program_time'])
+        
+        # Appendix (error): Karger vs KargerTimeout approx error
+        print_comparison(dataframes_merge, [ KARGER ], ['min_cut', 'expected_min_cut', 'min_cut_error'])
+        print_comparison(dataframes_merge, [ KARGER_TOUT ], ['min_cut', 'expected_min_cut', 'min_cut_error'])
+
+        # Appendix: full contraction statistics
+        print_comparison(dataframes_merge, [ KARGER ], ['program_time', 'full_contraction'])
 
     # export minimized in-memory CSV files to LaTeX tables (they will still require some manual work tho)
     # export_dataframes_merge_to_latex(dataframes_merge)
@@ -645,8 +687,12 @@ if __name__ == '__main__':
         # Q1: Full contraction scaling with nodes
         karger_full_contraction_chart(dataframes_merge)
 
+        # Q2: Estimated discovery iter
+        karger_runtime(dataframes_merge)
+
         # Q3: For each dataset compare discovery time with algorithm runtime.
         karger_discovery_vs_program_time_chart(dataframes_merge)
+        karger_discovery_iter_vs_estimated(dataframes_merge)
         
         # Q4: Output, Expected, Relative Error
         karger_relative_error(dataframes_merge)  # all zeros!

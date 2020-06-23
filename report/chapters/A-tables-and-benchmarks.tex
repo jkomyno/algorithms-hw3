@@ -1,0 +1,290 @@
+\section{Tabelle e banchmarks}
+\label{cap:tables-and-benchmarks}
+
+\subsection{Tempi di esecuzione}
+\label{sec:runtime-tables}
+
+\emph{Nota}: tutti i tempi riportati sono in \textbf{millisecondi}.
+
+\begin{table}[H]
+    \centering
+
+    \begin{tabular}{lrrr}
+     \hline
+     \multicolumn{4}{c}{KargerMinCut} \\
+     \hline
+     Istanza                    &   Nodi &   Discovery Time  &        Runtime \\
+     \hline
+     input\_random\_1\_6.txt    &       6 &            2.17  &          2.494 \\
+     input\_random\_2\_6.txt    &       6 &            1.523 &          1.833 \\
+     input\_random\_3\_6.txt    &       6 &            1.753 &          2.104 \\
+     input\_random\_4\_6.txt    &       6 &            1.852 &          2.193 \\
+     input\_random\_5\_10.txt   &      10 &            3.365 &          6.133 \\
+     input\_random\_6\_10.txt   &      10 &            1.591 &          4.272 \\
+     input\_random\_7\_10.txt   &      10 &            2.319 &          4.709 \\
+     input\_random\_8\_10.txt   &      10 &            1.475 &          4.082 \\
+     input\_random\_10\_25.txt  &      25 &            6.326 &        115.6   \\
+     input\_random\_11\_25.txt  &      25 &            3.593 &        114.911 \\
+     input\_random\_12\_25.txt  &      25 &            7.163 &        122.028 \\
+     input\_random\_9\_25.txt   &      25 &            6.706 &        117.197 \\
+     input\_random\_13\_50.txt  &      50 &           78.397 &       2036.15  \\
+     input\_random\_14\_50.txt  &      50 &          162.461 &       2020.97  \\
+     input\_random\_15\_50.txt  &      50 &           20.897 &       1892.18  \\
+     input\_random\_16\_50.txt  &      50 &           42.857 &       1956.62  \\
+     input\_random\_17\_75.txt  &      75 &          142.054 &       9896.07  \\
+     input\_random\_18\_75.txt  &      75 &          169.908 &      10556.8   \\
+     input\_random\_19\_75.txt  &      75 &          289.05  &      10387     \\
+     input\_random\_20\_75.txt  &      75 &          152.638 &       9979.33  \\
+     input\_random\_21\_100.txt &     100 &          915.934 &      35081.1   \\
+     input\_random\_22\_100.txt &     100 &          311.953 &      34644.7   \\
+     input\_random\_23\_100.txt &     100 &           90.743 &      35958.7   \\
+     input\_random\_24\_100.txt &     100 &         1026.61  &      35995.1   \\
+     input\_random\_25\_125.txt &     125 &          449.168 &     100097     \\
+     input\_random\_26\_125.txt &     125 &          558.167 &      96016.8   \\
+     input\_random\_27\_125.txt &     125 &         1647.12  &      98977.3   \\
+     input\_random\_28\_125.txt &     125 &         3930.86  &      96256.6   \\
+     input\_random\_29\_150.txt &     150 &         4458.47  &     231983     \\
+     input\_random\_30\_150.txt &     150 &         3278.94  &     223183     \\
+     input\_random\_31\_150.txt &     150 &         3846.83  &     224276     \\
+     input\_random\_32\_150.txt &     150 &        11258.7   &     228121     \\
+     input\_random\_33\_175.txt &     175 &         7825.21  &     463371     \\
+     input\_random\_34\_175.txt &     175 &         3155.08  &     464485     \\
+     input\_random\_35\_175.txt &     175 &        26332.9   &     485872     \\
+     input\_random\_36\_175.txt &     175 &         1977.07  &     444934     \\
+     input\_random\_37\_200.txt &     200 &         7979.94  &     902450     \\
+     input\_random\_38\_200.txt &     200 &        18213.6   &     843316     \\
+     input\_random\_39\_200.txt &     200 &        16414.2   &     879969     \\
+     input\_random\_40\_200.txt &     200 &        12287.4   &     902958     \\
+     \hline
+    \end{tabular}
+
+    \caption{Runtime e discovery time per KargerMinCut}
+    \label{table:karger-running-time}
+\end{table}
+
+\begin{table}[H]
+    \centering
+
+    \begin{tabular}{lrrr}
+     \hline
+     \multicolumn{4}{c}{KargerMinCutTimeout} \\
+     \hline
+     Istanza                    &   Nodi &   Discovery Time  &        Runtime \\
+     \hline
+     input\_random\_1\_6.txt    &       6 &            2.073 &          2.839 \\
+     input\_random\_2\_6.txt    &       6 &            1.829 &          2.245 \\
+     input\_random\_3\_6.txt    &       6 &            2.018 &          2.467 \\
+     input\_random\_4\_6.txt    &       6 &            1.98  &          2.47  \\
+     input\_random\_5\_10.txt   &      10 &            2.463 &          5.074 \\
+     input\_random\_6\_10.txt   &      10 &            2.143 &          4.593 \\
+     input\_random\_7\_10.txt   &      10 &            1.947 &          4.758 \\
+     input\_random\_8\_10.txt   &      10 &            1.91  &          4.676 \\
+     input\_random\_10\_25.txt  &      25 &            6.726 &        113.234 \\
+     input\_random\_11\_25.txt  &      25 &            6.449 &        118.174 \\
+     input\_random\_12\_25.txt  &      25 &            5.543 &        120.776 \\
+     input\_random\_9\_25.txt   &      25 &            4.858 &        114.659 \\
+     input\_random\_13\_50.txt  &      50 &          181.982 &       2034.49  \\
+     input\_random\_14\_50.txt  &      50 &          307.333 &       2073.14  \\
+     input\_random\_15\_50.txt  &      50 &           22.906 &       1982.21  \\
+     input\_random\_16\_50.txt  &      50 &           78.742 &       2040.59  \\
+     input\_random\_17\_75.txt  &      75 &          661.992 &      10050.1   \\
+     input\_random\_18\_75.txt  &      75 &           57.417 &      10652.3   \\
+     input\_random\_19\_75.txt  &      75 &          448.759 &      10435.2   \\
+     input\_random\_20\_75.txt  &      75 &          193.605 &       9940.02  \\
+     input\_random\_21\_100.txt &     100 &          450.032 &      35176.9   \\
+     input\_random\_22\_100.txt &     100 &          711.509 &      34926     \\
+     input\_random\_23\_100.txt &     100 &          407.518 &      36408.7   \\
+     input\_random\_24\_100.txt &     100 &          108.37  &      35952.5   \\
+     input\_random\_25\_125.txt &     125 &         1749.07  &     100200     \\
+     input\_random\_26\_125.txt &     125 &          392.669 &      96237.8   \\
+     input\_random\_27\_125.txt &     125 &         1651.15  &      99110.5   \\
+     input\_random\_28\_125.txt &     125 &         2368.78  &      96691.9   \\
+     input\_random\_29\_150.txt &     150 &         1983.04  &     120007     \\
+     input\_random\_30\_150.txt &     150 &         3466.14  &     120009     \\
+     input\_random\_31\_150.txt &     150 &         4788.59  &     120008     \\
+     input\_random\_32\_150.txt &     150 &         1387.86  &     120010     \\
+     input\_random\_33\_175.txt &     175 &         5307.53  &     120011     \\
+     input\_random\_34\_175.txt &     175 &        14102.4   &     120014     \\
+     input\_random\_35\_175.txt &     175 &        19510     &     120014     \\
+     input\_random\_36\_175.txt &     175 &         3889.23  &     120010     \\
+     input\_random\_37\_200.txt &     200 &        22708.9   &     120018     \\
+     input\_random\_38\_200.txt &     200 &        38137.8   &     120018     \\
+     input\_random\_39\_200.txt &     200 &        21231.2   &     120015     \\
+     input\_random\_40\_200.txt &     200 &        32150.5   &     120016     \\
+     \hline
+    \end{tabular}
+
+    \caption{Runtime e discovery time per KargerMinCutTimeout}
+    \label{table:kargertimeout-running-time}
+\end{table}
+
+\begin{table}[H]
+    \centering
+
+    \begin{tabular}{lrrr}
+     \hline
+     \multicolumn{4}{c}{KargerMinCut} \\
+     \hline
+     Istanza                    &    Nodi &        Runtime &   Full Contraction \\
+     \hline
+     input\_random\_1\_6.txt    &       6 &          2.494 &              0.061 \\
+     input\_random\_2\_6.txt    &       6 &          1.833 &              0.054 \\
+     input\_random\_3\_6.txt    &       6 &          2.104 &              0.06  \\
+     input\_random\_4\_6.txt    &       6 &          2.193 &              0.061 \\
+     input\_random\_5\_10.txt   &      10 &          6.133 &              0.038 \\
+     input\_random\_6\_10.txt   &      10 &          4.272 &              0.036 \\
+     input\_random\_7\_10.txt   &      10 &          4.709 &              0.035 \\
+     input\_random\_8\_10.txt   &      10 &          4.082 &              0.035 \\
+     input\_random\_10\_25.txt  &      25 &        115.6   &              0.116 \\
+     input\_random\_11\_25.txt  &      25 &        114.911 &              0.115 \\
+     input\_random\_12\_25.txt  &      25 &        122.028 &              0.122 \\
+     input\_random\_9\_25.txt   &      25 &        117.197 &              0.116 \\
+     input\_random\_13\_50.txt  &      50 &       2036.15  &              0.417 \\
+     input\_random\_14\_50.txt  &      50 &       2020.97  &              0.416 \\
+     input\_random\_15\_50.txt  &      50 &       1892.18  &              0.389 \\
+     input\_random\_16\_50.txt  &      50 &       1956.62  &              0.402 \\
+     input\_random\_17\_75.txt  &      75 &       9896.07  &              0.82  \\
+     input\_random\_18\_75.txt  &      75 &      10556.8   &              0.873 \\
+     input\_random\_19\_75.txt  &      75 &      10387     &              0.858 \\
+     input\_random\_20\_75.txt  &      75 &       9979.33  &              0.824 \\
+     input\_random\_21\_100.txt &     100 &      35081.1   &              1.529 \\
+     input\_random\_22\_100.txt &     100 &      34644.7   &              1.513 \\
+     input\_random\_23\_100.txt &     100 &      35958.7   &              1.568 \\
+     input\_random\_24\_100.txt &     100 &      35995.1   &              1.569 \\
+     input\_random\_25\_125.txt &     125 &     100097     &              2.665 \\
+     input\_random\_26\_125.txt &     125 &      96016.8   &              2.554 \\
+     input\_random\_27\_125.txt &     125 &      98977.3   &              2.634 \\
+     input\_random\_28\_125.txt &     125 &      96256.6   &              2.561 \\
+     input\_random\_29\_150.txt &     150 &     231983     &              4.13  \\
+     input\_random\_30\_150.txt &     150 &     223183     &              3.973 \\
+     input\_random\_31\_150.txt &     150 &     224276     &              3.992 \\
+     input\_random\_32\_150.txt &     150 &     228121     &              4.059 \\
+     input\_random\_33\_175.txt &     175 &     463371     &              5.874 \\
+     input\_random\_34\_175.txt &     175 &     464485     &              5.889 \\
+     input\_random\_35\_175.txt &     175 &     485872     &              6.163 \\
+     input\_random\_36\_175.txt &     175 &     444934     &              5.645 \\
+     input\_random\_37\_200.txt &     200 &     902450     &              8.534 \\
+     input\_random\_38\_200.txt &     200 &     843316     &              7.97  \\
+     input\_random\_39\_200.txt &     200 &     879969     &              8.318 \\
+     input\_random\_40\_200.txt &     200 &     902958     &              8.534 \\
+     \hline
+    \end{tabular}
+
+    \caption{Tempo di esecuzione full contraction per KargerMinCut}
+    \label{table:karger-full-contraction}
+\end{table}
+
+\subsection{Errore di approssimazione}
+\label{sec:approx-error-tables}
+
+\begin{table}[H]
+    \centering
+
+    \begin{tabular}{lrrrr}
+     \hline
+     \multicolumn{5}{c}{KargerMinCut} \\
+     \hline
+     Istanza                    &    Nodi &   Min Cut &     Min Cut Atteso &     Errore (\%) \\
+     \hline
+     input\_random\_1\_6.txt    &       6 &         2 &                  2 &               0 \\
+     input\_random\_2\_6.txt    &       6 &         1 &                  1 &               0 \\
+     input\_random\_3\_6.txt    &       6 &         3 &                  3 &               0 \\
+     input\_random\_4\_6.txt    &       6 &         4 &                  4 &               0 \\
+     input\_random\_5\_10.txt   &      10 &         4 &                  4 &               0 \\
+     input\_random\_6\_10.txt   &      10 &         3 &                  3 &               0 \\
+     input\_random\_7\_10.txt   &      10 &         2 &                  2 &               0 \\
+     input\_random\_8\_10.txt   &      10 &         1 &                  1 &               0 \\
+     input\_random\_10\_25.txt  &      25 &         6 &                  6 &               0 \\
+     input\_random\_11\_25.txt  &      25 &         8 &                  8 &               0 \\
+     input\_random\_12\_25.txt  &      25 &         9 &                  9 &               0 \\
+     input\_random\_9\_25.txt   &      25 &         7 &                  7 &               0 \\
+     input\_random\_13\_50.txt  &      50 &        15 &                 15 &               0 \\
+     input\_random\_14\_50.txt  &      50 &        16 &                 16 &               0 \\
+     input\_random\_15\_50.txt  &      50 &        14 &                 14 &               0 \\
+     input\_random\_16\_50.txt  &      50 &        10 &                 10 &               0 \\
+     input\_random\_17\_75.txt  &      75 &        19 &                 19 &               0 \\
+     input\_random\_18\_75.txt  &      75 &        15 &                 15 &               0 \\
+     input\_random\_19\_75.txt  &      75 &        18 &                 18 &               0 \\
+     input\_random\_20\_75.txt  &      75 &        16 &                 16 &               0 \\
+     input\_random\_21\_100.txt &     100 &        22 &                 22 &               0 \\
+     input\_random\_22\_100.txt &     100 &        23 &                 23 &               0 \\
+     input\_random\_23\_100.txt &     100 &        19 &                 19 &               0 \\
+     input\_random\_24\_100.txt &     100 &        24 &                 24 &               0 \\
+     input\_random\_25\_125.txt &     125 &        34 &                 34 &               0 \\
+     input\_random\_26\_125.txt &     125 &        29 &                 29 &               0 \\
+     input\_random\_27\_125.txt &     125 &        36 &                 36 &               0 \\
+     input\_random\_28\_125.txt &     125 &        31 &                 31 &               0 \\
+     input\_random\_29\_150.txt &     150 &        37 &                 37 &               0 \\
+     input\_random\_30\_150.txt &     150 &        35 &                 35 &               0 \\
+     input\_random\_31\_150.txt &     150 &        41 &                 41 &               0 \\
+     input\_random\_32\_150.txt &     150 &        39 &                 39 &               0 \\
+     input\_random\_33\_175.txt &     175 &        42 &                 42 &               0 \\
+     input\_random\_34\_175.txt &     175 &        45 &                 45 &               0 \\
+     input\_random\_35\_175.txt &     175 &        53 &                 53 &               0 \\
+     input\_random\_36\_175.txt &     175 &        43 &                 43 &               0 \\
+     input\_random\_37\_200.txt &     200 &        54 &                 54 &               0 \\
+     input\_random\_38\_200.txt &     200 &        52 &                 52 &               0 \\
+     input\_random\_39\_200.txt &     200 &        51 &                 51 &               0 \\
+     input\_random\_40\_200.txt &     200 &        61 &                 61 &               0 \\
+     \hline
+    \end{tabular}
+
+    \caption{Errore di approssimazione KargerMinCut}
+    \label{table:karger-approx-error}
+\end{table}
+
+\begin{table}[H]
+    \centering
+
+    \begin{tabular}{lrrrr}
+     \hline
+     \multicolumn{5}{c}{KargerMinCutTimeout} \\
+     \hline
+     Istanza                    &    Nodi &   Min Cut &     Min Cut Atteso &     Errore (\%) \\
+     \hline
+     input\_random\_1\_6.txt    &       6 &         2 &                  2 &           0     \\
+     input\_random\_2\_6.txt    &       6 &         1 &                  1 &           0     \\
+     input\_random\_3\_6.txt    &       6 &         3 &                  3 &           0     \\
+     input\_random\_4\_6.txt    &       6 &         4 &                  4 &           0     \\
+     input\_random\_5\_10.txt   &      10 &         4 &                  4 &           0     \\
+     input\_random\_6\_10.txt   &      10 &         3 &                  3 &           0     \\
+     input\_random\_7\_10.txt   &      10 &         2 &                  2 &           0     \\
+     input\_random\_8\_10.txt   &      10 &         1 &                  1 &           0     \\
+     input\_random\_10\_25.txt  &      25 &         6 &                  6 &           0     \\
+     input\_random\_11\_25.txt  &      25 &         8 &                  8 &           0     \\
+     input\_random\_12\_25.txt  &      25 &         9 &                  9 &           0     \\
+     input\_random\_9\_25.txt   &      25 &         7 &                  7 &           0     \\
+     input\_random\_13\_50.txt  &      50 &        15 &                 15 &           0     \\
+     input\_random\_14\_50.txt  &      50 &        16 &                 16 &           0     \\
+     input\_random\_15\_50.txt  &      50 &        14 &                 14 &           0     \\
+     input\_random\_16\_50.txt  &      50 &        10 &                 10 &           0     \\
+     input\_random\_17\_75.txt  &      75 &        19 &                 19 &           0     \\
+     input\_random\_18\_75.txt  &      75 &        15 &                 15 &           0     \\
+     input\_random\_19\_75.txt  &      75 &        18 &                 18 &           0     \\
+     input\_random\_20\_75.txt  &      75 &        16 &                 16 &           0     \\
+     input\_random\_21\_100.txt &     100 &        22 &                 22 &           0     \\
+     input\_random\_22\_100.txt &     100 &        23 &                 23 &           0     \\
+     input\_random\_23\_100.txt &     100 &        19 &                 19 &           0     \\
+     input\_random\_24\_100.txt &     100 &        24 &                 24 &           0     \\
+     input\_random\_25\_125.txt &     125 &        34 &                 34 &           0     \\
+     input\_random\_26\_125.txt &     125 &        29 &                 29 &           0     \\
+     input\_random\_27\_125.txt &     125 &        36 &                 36 &           0     \\
+     input\_random\_28\_125.txt &     125 &        31 &                 31 &           0     \\
+     input\_random\_29\_150.txt &     150 &        37 &                 37 &           0     \\
+     input\_random\_30\_150.txt &     150 &        35 &                 35 &           0     \\
+     input\_random\_31\_150.txt &     150 &        41 &                 41 &           0     \\
+     input\_random\_32\_150.txt &     150 &        39 &                 39 &           0     \\
+     input\_random\_33\_175.txt &     175 &        42 &                 42 &           0     \\
+     input\_random\_34\_175.txt &     175 &        45 &                 45 &           0     \\
+     input\_random\_35\_175.txt &     175 &        53 &                 53 &           0     \\
+     input\_random\_36\_175.txt &     175 &        43 &                 43 &           0     \\
+     input\_random\_37\_200.txt &     200 &        54 &                 54 &           0     \\
+     input\_random\_38\_200.txt &     200 &        52 &                 52 &           0     \\
+     input\_random\_39\_200.txt &     200 &        51 &                 51 &           0     \\
+     input\_random\_40\_200.txt &     200 &        63 &                 61 &           3.279 \\
+     \hline
+    \end{tabular}
+
+    \caption{Errore di approssimazione KargerMinCutTimeout}
+    \label{table:kargertimeout-approx-error}
+\end{table}
