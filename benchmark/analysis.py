@@ -260,7 +260,7 @@ def compare_2_programs(dfs_dict: Dict[str, pd.DataFrame], program_1: str, progra
     return pd.DataFrame(data, columns=['', *columns])
 
 
-def compare_n_programs(dfs_dict: Dict[str, pd.DataFrame], programs: List[str]):
+def compare_n_programs(dfs_dict: Dict[str, pd.DataFrame], programs: List[str], columns: List[str]):
 
     df = pd.DataFrame()
 
@@ -273,7 +273,7 @@ def compare_n_programs(dfs_dict: Dict[str, pd.DataFrame], programs: List[str]):
             df = pd.concat([df, data], axis=1, sort=False)
             headers = True
 
-        data = dfs_dict[program][['discovery_time', 'program_time']]
+        data = dfs_dict[program][columns]
         df = pd.concat([df, data], axis=1, sort=False)
     
     # sort by nodes and then by instances
@@ -298,10 +298,10 @@ def print_comparison_time(dfs_dict: Dict[str, pd.DataFrame], programs: List[str]
     pretty_print_pandas(df_comparison)
 
 
-def print_comparison(dfs_dict: Dict[str, pd.DataFrame], programs: List[str]):
+def print_comparison(dfs_dict: Dict[str, pd.DataFrame], programs: List[str], columns: List[str]):
     print(f'Comparison {names_to_vs(programs)}.')
 
-    df_comparison = compare_n_programs(dfs_dict, programs)
+    df_comparison = compare_n_programs(dfs_dict, programs, columns)
     pretty_print_pandas(df_comparison)
 
 
@@ -645,9 +645,13 @@ if __name__ == '__main__':
     if IS_TABLE_ENABLED:
         # compare multiple programs to show potential improvements
 
-        # Appendix: Karger vs KargerTimeout running time (program vs discovery time)
-        print_comparison(dataframes_merge, [ KARGER ])
-        print_comparison(dataframes_merge, [ KARGER_TOUT ])
+        # Appendix (runtime): Karger vs KargerTimeout running time (program vs discovery time)
+        print_comparison(dataframes_merge, [ KARGER ], ['discovery_time', 'program_time'])
+        print_comparison(dataframes_merge, [ KARGER_TOUT ], ['discovery_time', 'program_time'])
+        
+        # Appendix (error): Karger vs KargerTimeout approx error
+        print_comparison(dataframes_merge, [ KARGER ], ['min_cut', 'expected_min_cut', 'min_cut_error'])
+        print_comparison(dataframes_merge, [ KARGER_TOUT ], ['min_cut', 'expected_min_cut', 'min_cut_error'])
 
     # export minimized in-memory CSV files to LaTeX tables (they will still require some manual work tho)
     # export_dataframes_merge_to_latex(dataframes_merge)

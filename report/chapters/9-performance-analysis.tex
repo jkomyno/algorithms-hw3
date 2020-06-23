@@ -126,14 +126,16 @@ Karger e Karger con Timeout (di seguito KargerMinCutTimeout). Il secondo
 differisce dal primo solo perché ad un certo punto l'esecuzione viene
 interrotta se l'algoritmo non è ancora terminato.\\
 
-\noindent Dal grafico \ref{fig:karger-vs-kargertout-error-chart} è
-possibile vedere che entrambi hanno bassissimo errore relativo
-sull'output, ma Karger impega un tempo considerevolmente maggiore per
-risolvere il problema, mentre KargerMinCutTimeout riesce con successo ad
-ottenere $0$ errore anche prima dello scadere del timeout. Ciò implica
-che con KargerMinCutTimeout potrebbe essere utilizzato per avere una
-soluzione approssimata entro un tempo accettabile. Quando descritto è
-mostrato nel grafico \ref{fig:karger-vs-kargertout-runtime-chart}.
+\noindent Dal grafico \ref{fig:karger-vs-kargertout-error-chart} e dal
+dettaglio riportato nelle tabelle \ref{table:karger-approx-error} e
+\ref{table:kargertimeout-approx-error} è possibile vedere che entrambi
+hanno bassissimo errore relativo sull'output, ma Karger impega un
+tempo considerevolmente maggiore per risolvere il problema, mentre
+KargerMinCutTimeout riesce con successo ad ottenere zero errore anche
+prima dello scadere del timeout. Ciò implica che con
+KargerMinCutTimeout potrebbe essere utilizzato per avere una soluzione
+approssimata entro un tempo accettabile. Quanto descritto è mostrato
+nel grafico \ref{fig:karger-vs-kargertout-runtime-chart}.
 
 \begin{figure}[H]
     \centering
