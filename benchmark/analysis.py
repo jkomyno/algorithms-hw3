@@ -323,7 +323,7 @@ def merge_dataframes_helper(dfs: List[pd.DataFrame]) -> pd.DataFrame:
     :return: new DataFrame merged row-wise
     """
     columns = ['filename', 'nodes', 'k', 'expected_min_cut', 'min_cut', 'program_time', 'discovery_time', 
-               'full_contraction', 'min_cut_error' ]
+               'discovery_iteration', 'full_contraction', 'min_cut_error' ]
     merged_df = pd.DataFrame(columns=columns)
 
     n_rows = dfs[0].shape[0]
