@@ -1,17 +1,17 @@
 \section{Estensioni e originalità}
 \label{cap:extensions-and-originalities}
 
-\noindent Oltre alle tre implementazioni richieste dalla consegna
-dell'homework, abbiamo deciso di esplorare qualche altro algoritmo per il problema del commesso viaggiatore negli spazi metrici.
+\noindent Oltre all'implementazione richiesta dalla consegna
+dell'homework, abbiamo deciso di esplorare un altro algoritmo per il problema del taglio minimo.
 
 \subsection{Algoritmo di Karger \& Stein}
 \label{sub:karger-stein-algorithm}
 
 L'algortimo di Karger \& Stein è una variante migliorata del semplice algoritmo di Karger. Come abbiamo osservato nella sezione TODO, la probabilità che l'algoritmo di Karger non scelga un arco del taglio minimo tende a diminuire man mano che l'algoritmo durante le iterazione scegli l'arco dove contrarre il grafo. Per questo motico l'algoritmo di Karger \& Stein svolge le prime iterazioni (dove la probabilità di non scelre un arco del min-cut) come l'algoritmo di Karger, mentre le "ultime" iterazioni vengono ripetute più volte con la speranza che qaulcuna di queste non becchi proprio l'arco del min-cut. \\
 
-Ora supponiamo di volere contrarre gli archi tra n vertici e k vertici in 2 iterazioni di karger normale distinte. Possiamo scegliere a questo punto k in modo da avere una probabilità di successo (ossia di trovare il min-cut) di $\dfrac{1}{2}$. Dunque in questo modo sappiamo che una delle sue esecuzioni indipendenti di Karger avrà successo. Prendiamo quella che ha successo e rieseguiamo tale procedura per il miglior grafo ricavato in una di queste 2 escuzioni.
+\noindent Ora supponiamo di volere contrarre gli archi tra n vertici e k vertici in 2 iterazioni di karger normale distinte. Possiamo scegliere a questo punto k in modo da avere una probabilità di successo (ossia di trovare il min-cut) di $\dfrac{1}{2}$. Dunque in questo modo sappiamo che una delle sue esecuzioni indipendenti di Karger avrà successo. Prendiamo quella che ha successo e rieseguiamo tale procedura per il miglior grafo ricavato in una di queste 2 escuzioni. \\
 
-Se scegliamo k (ossia il numero di iterazioni iniziali) pari a:
+\noindent Se scegliamo k (ossia il numero di iterazioni iniziali) pari a:
 $$ k = \dfrac{n}{\sqrt{2}} + 1$$
 che equivale a circa il 70\% dei nodi $n$ del grafo rimanenti da contrarre (o equivalentemente abbiamo contratto il 30\% dei nodi $n$ del grafo) a questo punto otteniamo la probabilità desiderata, infatti:
 
@@ -37,16 +37,16 @@ Il listato \ref{listing:karger&stein} contiene la nostra implementazione di ques
 \begin{listing}[!ht]
 \begin{minted}{c++}
 // kager_stein.h
-[[nodiscard]] size_t fast_min_cut(const std::shared_ptr<AdjacencyMapGraph>& graph) 
+[[nodiscard]] size_t fast_min_cut(const std::shared_ptr<AdjacencyMapGraph>& graph)
 noexcept {
     const size_t n = graph->size();
-    
+
     // Step 1
     if (n <= 6) {
         const size_t k = utils::estimate_iterations_karger(n);
         return karger(graph, k);
     }
-    
+
     // Step 2a
     const size_t t =
         static_cast<size_t>(std::ceil((static_cast<double>(n) / std::sqrt(2))));
@@ -67,9 +67,9 @@ noexcept {
 \subsubsection{Successo con alta probabilità e complessità}
 \label{sub:karger-stein-success-whp}
 
-Per cominciare calcoliamo il nuovo tempo di esecuzione per una singola iterazione: 
+Per cominciare calcoliamo il nuovo tempo di esecuzione per una singola iterazione:
 $$T(n) = 2T(\dfrac{n}{\sqrt{2}}) + O(n^2) $$
-Dal Teorema Principale deduciamo quindi che $T(n) = O(n^2 \log{n})$\\
+Dal Teorema Master deduciamo quindi che $T(n) = O(n^2 \log{n})$\\
 
 \noindent Possiamo ora quindi scrivere una relazione ricorrente per il successo in probabilità. Sappiamo che la probabilità di successo nelle contrazioni da n a $\dfrac{n}{\sqrt{2}} + 1$ non è più piccola di $\frac{1}{2}$, dunque:
 $$P(n) \geq 1-(1- \frac{1}{2}P(\dfrac{n}{\sqrt{2}}))^2$$

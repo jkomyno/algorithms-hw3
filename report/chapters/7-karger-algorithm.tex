@@ -13,7 +13,7 @@
     \item \textbf{Step 4}: L'operazione viene ripetuta finché il grafo contiene solo 2 nodi.
 \end{enumerate}
 
-La funzione \codeinline{full\_contraction} prende in input un grafo connesso, non diretto, non pesato, ed è definita come segue:
+\noindent La funzione \codeinline{full\_contraction} prende in input un grafo connesso, non diretto, non pesato, ed è definita come segue:
 
 \begin{enumerate}
     \item \textbf{Step a}: Viene creata una copia del grafo di input;
@@ -27,11 +27,12 @@ La funzione \codeinline{full\_contraction} prende in input un grafo connesso, no
 \begin{listing}[!ht]
 \begin{minted}{c++}
 // Shared/full_contraction.h
-auto full_contraction(const std::shared_ptr<AdjacencyMapGraph>& graph) noexcept {
+auto full_contraction(const std::shared_ptr<AdjacencyMapGraph>& graph,
+                      const size_t min_n = 2) noexcept {
   // Step a
   auto graph_copy = std::make_unique<AdjacencyMapGraph>(*graph.get());
 
-  while (graph_copy->size() > 2) {
+  while (graph_copy->size() > min_n) {
     // Step b
     const auto [u, v] = graph_copy->get_random_edge();
 
@@ -65,13 +66,13 @@ size_t karger(const std::shared_ptr<AdjacencyMapGraph>& graph, size_t k) noexcep
 \label{listing:karger}
 \end{listing}
 
-\noindent L'algoritmo di Karger è stato implementato a partire dallo pseudocodice visto in classe. \\
+\noindent L'algoritmo di Karger è stato implementato a partire dallo pseudocodice visto a lezione. \\
 
 \subsubsection{Osservazioni}
 
 \begin{itemize}
     \item La funzione \codeinline{full\_contraction} è definita nella cartella \codeinline{Shared} perché la sua implementazione è riutilizzata anche dell'algoritmo di Karger \& Stein.
-    \item
+    \item Abbiamo usato il parametro di default \codeinline{min_n} settato a 2 poter riutilizzare il codice della procedura anche per Karger \& Stein semplicemente ridefinendo il secondo parametro. Questa scelta non cambia assolutamente il funzionamento dell'algoritmo di Karger, ma aiuta a ridurre la ridondanza del codice.
 \end{itemize}
 
 \subsection{Contrazione del grafo}
@@ -114,37 +115,6 @@ Il multigrafo risultante, denotato come $G' = G/e$, ha un vertice in meno rispet
      \label{fig:contraction-example}
 \end{figure}
 
-\begin{listing}[!ht]
-\begin{minted}{c++}
-// Shared/AdjacencyMapGraph.h
-TODO: describe the function in a paragraph, remove the comments
-inline void AdjacencyMapGraph::contract(size_t contracted, size_t incorporator) {
-    // delete every arc between contracted and incorporator.
-    // One is the selected arc, the other ones would become self-loops, so we get rid of them.
-    edge_count_map.erase({contracted, incorporator});
-    adj_map[incorporator].erase(contracted);
-    adj_map[contracted].erase(incorporator);
-
-    // transfer every edge incident in contracted to incorporator.
-    // Note that incorporator won't appear in contracted's adjacent nodes.
-    for (const auto node : adj_map.at(contracted)) {
-        // replace every arc (contracted, node) with a new (incorporator, node)
-        adj_map[node].erase(contracted);
-        adj_map[node].insert(incorporator);
-        adj_map[incorporator].insert(node);
-
-        const size_t n_multi_edge = edge_count_map.at({contracted, node});
-        edge_count_map.erase({contracted, node});
-        edge_count_map[{incorporator, node}] += n_multi_edge;
-    }
-
-    // delete contracted node
-    adj_map.erase(contracted);
-\end{minted}
-\caption{Implementazione della contrazione del grafo.}
-\label{listing:adjacency-map-graph-contract}
-\end{listing}
-
 \subsection{Analisi probabilistica}
 \label{sub:karger-success-probability}
 
@@ -165,7 +135,7 @@ $$Pr(E_{2} \mid E_{1}) \geq 1-\dfrac{t}{t (n-1)/2}$$
 $$...$$
 $$Pr(E_{i} \mid E_{1} \cup E_{2} \cup ... \cup E_{i-1}) \geq 1-\dfrac{t}{t (n-i+1)/2} = 1 - \dfrac{2}{n-i+1}$$
 
-Ora, la probabilità che ad ogni iterazioni non scelgo un lato del min-cut è:
+Ora, la probabilità che ad ogni iterazione non venga scelto un lato del min-cut è:
 
 $$Pr(\bigcap_{i=1}^{n-2} E_{i}) \geq \prod_{i=1}^{n-2} (1 - \dfrac{2}{n-i+1}) = \dfrac{2}{n(n-1)} \geq \dfrac{2}{n^2}$$
 

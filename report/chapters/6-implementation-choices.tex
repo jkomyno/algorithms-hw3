@@ -4,8 +4,8 @@
 \subsection{Rappresentazione del grafo}
 \label{sub:graph-representation}
 
-Gli algoritmi di questo homework operano su (multi)grafi non pesati,
-connessi e non diretti.\\
+Gli algoritmi di questo homework operano su grafi non pesati,
+ non diretti e connessi. I grafi letti in input sono considerati grafici semplici, ma essi possono diventare multigrafi a seguito dell'invocazione del metodo \codeinline{contract}, definito nel paragrafo "Contrazione di due nodi" della sezione \ref{par:contraction}. \\
 
 % \noindent Come nel precedente homework, per semplificare la logica di indicizzazione dei nodi del grafo, la label dei nodi (originariamente numerata da $1$ a $n$) è decrementata di 1, quindi i nodi sono rappresentati dall'intervallo numerico $[0, n-1]$.
 
@@ -21,7 +21,7 @@ accedere al numero di archi $(u,v)$ presenti nel multigrafo. Il tipo di tale att
 \noindent La chiave della mappa ha tipo \codeinline{Edge}, che rappresenta un generico arco non pesato e non diretto $(u,v)$. Abbiamo definito l'operatore di uguaglianza di \codeinline{Edge} per ottenere la commutatività, ovvero considerare l'arco $(u, v)$ identico all'arco $(v, u)$, ai fini di avere consistenza nel tracciamento degli archi del multigrafo. Anche la funzione hash definita per il tipo \codeinline{Edge}, riportata nel listato  \ref{listing:hash-fun}, è commutativa.
 \noindent Il valore della mappa è di tipo intero senza segno \codeinline{size\_t} e rappresenta la cardinalità dell'insieme di archi $(u,v)$ corrispondenti alla chiave. \\
 
-\noindent \codeinline{edge\_count\_map} è essenziale nel tracciamento degli archi durante la contrazione del grafo descritta dalla procedura  \codeinline{full\_contration} nella sezione \ref{sub:karger-definition}.\\
+\noindent \codeinline{edge\_count\_map} è essenziale nel tracciamento degli archi durante la contrazione del grafo descritta dalla procedura  \codeinline{full\_contraction} nella sezione \ref{sub:karger-definition}.\\
 
 \begin{listing}[!ht]
 \begin{minted}{c++}
@@ -39,17 +39,18 @@ struct edge_hash {
 \end{listing}
 
 \paragraph{Contrazione di due nodi}
+\label{par:contraction}
 
-Il nuovo metodo \codeinline{AdjacencyMapGraph::contract} effettua la contrazione di due vertici, chiamati \codeinline{contracted} e \codeinline{incorporator}. \codeinline{contracted} indica il nodo da contrarre, mentre \codeinline{incorporator} è il vertice che deve acquisire gli archi incidenti al nodo contratto. \\
+Il nuovo metodo \codeinline{AdjacencyMapGraph::contract} effettua la contrazione di due vertici, chiamati \codeinline{contracted} e \codeinline{incorporator}. Come suggeriscono i nomi usati per identificare le variabili, \codeinline{contracted} indica il nodo da contrarre, mentre \codeinline{incorporator} è il vertice che deve acquisire gli archi incidenti al nodo contratto. \\
 
 \noindent Gli step eseguiti dalla procedura \codeinline{contract}, la cui implementazione è riportata nel listato \ref{listing:met-contract}, sono i seguenti:
 
 \begin{enumerate}
     \item Eliminare tutti gli archi presenti tra
-      \codeinline{contracted} e \codeinline{incorportator} dalla Mappa di Adiacenza e da \codeinline{edge\_count\_map}.
+      \codeinline{contracted} e \codeinline{incorporator} dalla Mappa di Adiacenza e da \codeinline{edge\_count\_map}.
 
     \item Trasferire ogni arco incidente in
-      \textit{contracted} su \textit{incorportator}, aggiornando anche il numero di archi corrispondenti in \codeinline{edge\_count\_map}.
+      \textit{contracted} su \textit{incorporator}, aggiornando anche il numero di archi corrispondenti in \codeinline{edge\_count\_map}.
 
     \item Eliminare dalla Mappa di Adiacenza tutti i riferimenti agli archi incidenti al vertice \codeinline{contracted} e il vertice stesso.
 \end{enumerate}
@@ -188,6 +189,27 @@ ulteriori commenti esplicativi.
 %Tutte le strutture dati elencate di seguito sono definite nella cartella \textit{Shared}.
 %Ove possibile, per la nomenclatura dei metodi abbiamo cercato di seguire lo stesso standard dei container STL di C++.
 %Inoltre, le strutture dati usate sono sempre pre-allocate in memoria quando possibile, evitando rehashing e riallocazioni dispendiose. Questo significa che la maggior parte delle operazioni indicate con \complexityConstant{} ammortizzato siano in realtà totalmente costanti nella pratica. \\
+
+\subsection{Copia del grafo}
+\label{sub:graph-copy}
+
+\noindent Uno degli step cruciali del metodo di Karger è preservare il grafo originale alla fine di ogni iterazione dell'algoritmo. La procedura \codeinline{full\_contraction} infatti invoca il metodo \\ \mintinline{c++}{AdjacentMapGraph::contract}, che muta il grafo a cui si riferisce. \\
+
+\noindent Abbiamo optato per passare come argomento a \codeinline{full\_contraction} un riferimento costante al grafo originale incapsulato in un puntatore condiviso (\mintinline{c++}{std::shared_ptr}), e abbiamo scelto di creare una nuova copia di esso incapsulata in un \mintinline{c++}{std::unique_ptr}. sono due \textit{smart pointers} diversi che permettono di usare puntatori in maniera \textit{safe}, senza alcun rischio di memory leak. \\
+
+\noindent Grazie a \mintinline{c++}{std::shared_ptr} è possibile passare il grafo originale come argomento ad altre sottoprocedure mantenendo l'ownership del puntatore alla procedura chiamante. L'oggetto viene quindi deallocato della memoria Heap solo il \codeinline{main} del programma termina. \mintinline{c++}{std::unique_ptr} è invece usato per disfarsi del grafo contratto ritornato da \codeinline{full\_contraction} al termine di ogni iterazione dell'algoritmo di Karger.
+
+\begin{listing}[!ht]
+\begin{minted}{c++}
+const std::shared_ptr<AdjacencyMapGraph>& graph = // ...
+std::unique_ptr<AdjacencyMapGraph> graph_copy =
+    std::make_unique<AdjacencyMapGraph>(*graph.get());
+\end{minted}
+\caption{Esempio di copia del grafo da uno \mintinline{c++}{std::shared_ptr} ad uno \mintinline{c++}{std::unique_ptr}.}
+\label{listing:graph-copy}
+\end{listing}
+
+ \noindent Il listing \ref{listing:graph-copy} mostra com'è possibile effettuare una copia profonda del grafo originale salvandola in uno \mintinline{c++}{std::unique_ptr}.
 
 \subsection{Misurazione del tempo di esecuzione}
 \label{sub:stopwatch}

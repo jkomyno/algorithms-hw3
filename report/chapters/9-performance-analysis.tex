@@ -51,9 +51,9 @@ per ottenere tempi di esecuzione ragionevoli.
 \end{displayquote}
 
 \noindent Per permettere all'algoritmo di karger un probabilità di
-fallimento pari a $\frac{1}{n}$ è necessario settare d = 1 e di
-conseguenza ricavare k con la formula vista nella sezione
-\ref{sub:karger-success-probability} e quindi:
+fallimento pari a $\frac{1}{n}$ è necessario che $d = 1$ e di
+conseguenza ricavare $k$ con la formula vista nella sezione
+\ref{sub:karger-success-probability}. Quindi:
 $$ k = 1 * \frac{n^2}{2} * ln(n)$$
 
 \noindent Il grafico \ref{fig:karger-runtime-chart} mostra il tempo di
@@ -106,7 +106,7 @@ capitare anche prima della fine dell'algorimto, e anzi, spesso è così.
     \label{fig:karger-discovery-vs-program-time-chart}
 \end{figure}
 
-Il grafico \ref{fig:karger-discovery-vs-estimated-k-chart} invece
+\noindent Il grafico \ref{fig:karger-discovery-vs-estimated-k-chart} invece
 illustra una comparativa tra il numero di iterazioni tramite le quali
 si trova il min cut e il numero di iterazioni $k$ stimato.
 
