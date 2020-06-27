@@ -16,12 +16,7 @@ misurati con la complessità asintotica di
 \noindent Il grafico \ref{fig:karger-full-contraction-chart} mostra la
 variazione dei tempi di calcolo al variare del numero dei vertici del
 grafo ed evidenzia la differenza del tempo di esecuzione pratico di
-\codeinline{full\_contraction} rispetto a quello asintotico. In
-realtà, come è possibile vedere, a meno di un certo fattore, anche se
-abbastanza significativo, le due curve hanno la stessa complessità
-asintotica.\\
-
-\noindent La tabella \ref{table:karger-full-contraction} mostra invece
+\codeinline{full\_contraction} rispetto a quello asintotico. È possibile vedere che nella pratica \codeinline{full\_contraction} cresce un po' meno che quadraticamente rispetto al numero di nodi. La tabella \ref{table:karger-full-contraction} mostra invece
 un dettaglio di quanto illustrato dal grafico.
 
 \begin{figure}[H]
@@ -29,7 +24,7 @@ un dettaglio di quanto illustrato dal grafico.
 
     \includegraphics[width=0.9\textwidth]{./images/Tempo_di_esecuzione_di_full_contraction_rispetto_al_numero_di_nodi.png}
 
-    \caption{Confronto tra il tempo di esecuzione di \codeinline{full\_contraction} e la sua complessità asintotica rispetto al numero di nodi. Grafico in scala logaritmica.}
+    \caption{Confronto tra il tempo di esecuzione di \codeinline{full\_contraction} (in microsecondi) e la sua complessità asintotica rispetto al numero di nodi.}
     \label{fig:karger-full-contraction-chart}
 \end{figure}
 
@@ -50,15 +45,14 @@ caso utilizzate un timeout oppure abbassate il numero di ripetizioni
 per ottenere tempi di esecuzione ragionevoli.
 \end{displayquote}
 
-\noindent Per permettere all'algoritmo di karger un probabilità di
+\noindent Per permettere all'algoritmo di Karger un probabilità di
 fallimento pari a $\frac{1}{n}$ è necessario che $d = 1$ e di
 conseguenza ricavare $k$ con la formula vista nella sezione
 \ref{sub:karger-success-probability}. Quindi:
 $$ k = 1 * \frac{n^2}{2} * ln(n)$$
 
 \noindent Il grafico \ref{fig:karger-runtime-chart} mostra il tempo di
-calcolo dell'algoritmo di Karger e lo confronta con il tempo
-asintotico rispetto al numero di nodi.
+esecuzione (in millisecondi) dell'algoritmo di Karger e lo confronta con il tempo asintotico rispetto al numero di nodi. Anche in questo caso, possiamo notare che la curva teorica e la curva del tempo di esecuzione effettiva sono piuttosto simili, a meno di oscillazioni osservabili soprattutto nei grafi col minor numero di nodi.
 
 \begin{figure}[H]
     \centering
@@ -89,8 +83,7 @@ Le tabelle \ref{table:karger-running-time} e
 dati. \\
 
 \noindent È possibile notare che per la curva di \emph{discovery time}
-i risultati hanno molta varianza, ma in linea generale essa segue in
-modo asintotico quella del \emph{runtime}.\\
+i risultati hanno molta varianza, ma in linea generale essa è almeno un ordine di grandezza più bassa rispetto a quella del \emph{runtime}. Possiamo ipotizzare che se lanciassimo Karger su grafi di 400 o 1000 nodi, la differenza tra il \emph{discovery time} e il \emph{runtime} sarebbe ancora più evidente. \\
 
 \noindent Ovviamente, come ci si può aspettare, la curva
 \emph{discovery time} è considerevolmente più bassa rispetto all'altra
@@ -138,7 +131,7 @@ contrazioni da eseguire non introduce nessun tipo di errore per
 l'algoritmo di Karger, quindi un grafico sarebbe poco informatico.\\
 
 \noindent Si ritiene utile invece mostrare le differenza tra
-Karger e Karger con Timeout (di seguito KargerMinCutTimeout). Il secondo
+KargerMinCut e KargerMinCutTimeout. Il secondo
 differisce dal primo solo perché ad un certo punto l'esecuzione viene
 interrotta se l'algoritmo non è ancora terminato.\\
 

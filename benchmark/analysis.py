@@ -57,13 +57,13 @@ KARGER_STEIN = 'KargerSteinMinCut'
 programs = [
     KARGER,
     KARGER_TOUT,
-    # KARGER_STEIN
+    KARGER_STEIN,
 ]
 
-ms_programs = [
-    'ms_karger_min_cut',
-    'ms_karger_min_cut_timeout',
-    # 'ms_karger_stein_min_cut',
+programs_use_meta = [
+    True,
+    True,
+    False,
 ]
 
 GROUND_TRUTH_DF = pd.DataFrame({
@@ -317,7 +317,7 @@ def pretty_print_pandas(df: pd.DataFrame, tablefmt='pretty'):
     print('\n')
 
 
-def merge_dataframes_helper(dfs: List[pd.DataFrame]) -> pd.DataFrame:
+def merge_dataframes_helper(dfs: List[pd.DataFrame], use_meta=True) -> pd.DataFrame:
     """
     Create a new in-memory DataFrame that, for each row of all the dataframes in dfs, keeps only the first row 
     values merging `program_time`, `discovery_time` and `full_contraction` by mean, `discovery_iteration` by median,
@@ -325,24 +325,35 @@ def merge_dataframes_helper(dfs: List[pd.DataFrame]) -> pd.DataFrame:
     :param dfs: List of DataFrames for a single program
     :return: new DataFrame merged row-wise
     """
-    columns = ['filename', 'nodes', 'k', 'expected_min_cut', 'min_cut', 'program_time', 'discovery_time', 
-               'discovery_iteration', 'full_contraction', 'min_cut_error' ]
+    columns_common = ['filename', 'nodes', 'k', 'expected_min_cut', 'min_cut', 'program_time']
+
+    if use_meta:
+        columns = [*columns_common, 'discovery_time', 'discovery_iteration', 'full_contraction', 'min_cut_error']
+    else:
+        columns = [*columns_common, 'min_cut_error']
+
+    # columns = ['filename', 'nodes', 'k', 'expected_min_cut', 'min_cut', 'program_time', 'discovery_time',
+    #            'discovery_iteration', 'full_contraction', 'min_cut_error' ]
     merged_df = pd.DataFrame(columns=columns)
 
     n_rows = dfs[0].shape[0]
     for row in range(n_rows):
         row_index = 0  # arbitrarily choosing first row
-        program_time = get_mean_at_row(dfs, row, column='program_time') / 1000.0
-        discovery_time = get_mean_at_row(dfs, row, column='discovery_time') / 1000.0
-        discovery_iteration = get_median_at_row(dfs, row, column='discovery_iteration')
-        full_contraction = get_mean_at_row(dfs, row, column='full_contraction') / 1000.0
+        program_time = get_mean_at_row(dfs, row, column='program_time') / 1000.0 # to ms
+
+        if use_meta:
+            discovery_time = get_mean_at_row(dfs, row, column='discovery_time') / 1000.0 # to ms
+            discovery_iteration = get_median_at_row(dfs, row, column='discovery_iteration')
+            full_contraction = get_mean_at_row(dfs, row, column='full_contraction')
 
         data = dfs[row_index].loc[row].copy()  # need to copy to avoid side effect on original dataframe.
-
         data['program_time'] = program_time
-        data['discovery_time'] = discovery_time
-        data['discovery_iteration'] = discovery_iteration
-        data['full_contraction'] = full_contraction
+
+        if use_meta:
+            data['discovery_time'] = discovery_time
+            data['discovery_iteration'] = discovery_iteration
+            data['full_contraction'] = full_contraction
+
         data['min_cut_error'] = 100 * (data['min_cut'] - data['expected_min_cut']) / data['expected_min_cut']
 
         merged_df = merged_df.append(data)
@@ -356,7 +367,7 @@ def merge_dataframes(dfs_dict: Dict[str, List[pd.DataFrame]]) -> Dict[str, pd.Da
     :param dfs_dict: original map of list of benchmark DataFrames for each program
     :return: merged map of 1 dataframe for each program
     """
-    dfs_flat_min = [merge_dataframes_helper(dfs) for dfs in dfs_dict.values()]
+    dfs_flat_min = [merge_dataframes_helper(dfs, use_meta=programs_use_meta[i]) for i, dfs in enumerate(dfs_dict.values())]
     return dict(zip(programs, dfs_flat_min))
 
 
@@ -527,13 +538,14 @@ def plot_precision_comparison(names: List[str], dfs: Dict[str, pd.DataFrame], ti
 
 def karger_full_contraction_chart(dfs):
     karger_df = dfs[KARGER].copy()
-    karger_df['full_contraction_asymptotic'] = np.square(karger_df['nodes']).astype(float)
+    # karger_df['full_contraction_asymptotic'] = 0.3 * np.square(karger_df['nodes']).astype(float)
     title = 'Tempo di esecuzione di full contraction rispetto al numero di nodi'
 
     g = sns.lineplot(karger_df['nodes'], karger_df['full_contraction'], label='Full Contraction')
-    g = sns.lineplot(karger_df['nodes'], karger_df['full_contraction_asymptotic'], label='Full Contraction (Asintocio: n^2)')
-    g.set(xlabel='Nodi', ylabel='Tempo (ms)')
-    g.set_yscale('log')
+    # g = sns.lineplot(karger_df['nodes'], karger_df['full_contraction_asymptotic'], label='Full Contraction Asintotico: n^2')
+    g.set(xlabel='Nodi', ylabel='Tempo (μs)')
+    # g.set_xlim(6, 200)
+    # g.set_yscale('log')
 
     plt.title(title)
     show_or_save_plot(title)
@@ -581,6 +593,8 @@ def karger_def_vs_tout_running_time(dfs):
     # merge dataset to a single one by appending rows
     df = karger_def_df
     df = df.append(karger_tout_df)
+
+    df.to_csv('karger_vs_karger_timeout.csv')
 
     # create the barplot with `hue='program'`
     g = sns.barplot(x='nodes', y='program_time', hue='program', data=df)
@@ -634,22 +648,57 @@ def karger_runtime(dfs):
 
     # add estimated runtime
     n = karger_df['nodes'].astype(np.double)
-    r = (n ** 4) * np.log(n)
+    r = 0.0002 * (n ** 4) * np.log(n)
 
     # save it in the dataframe
     karger_df['estimated_program_time'] = r
 
     # plot the result
     g = sns.lineplot(karger_df['nodes'], karger_df['program_time'], label=f'{KARGER} (Runtime)')
-    g = sns.lineplot(karger_df['nodes'], karger_df['estimated_program_time'], label=f'{KARGER} (Asintotico: n^4 log(n))')
+    g = sns.lineplot(karger_df['nodes'], karger_df['estimated_program_time'], label=f'{KARGER} Asintotico: n^4 log(n)')
     g.set(xlabel='Nodi', ylabel='Tempo (ms)')
-    g.set_yscale('log')
+    # g.set_yscale('log')
 
     title = f'Tempo di esecuzione attuale e asintotico\n rispetto al numero di nodi per {KARGER}'
 
     plt.title(title)
     show_or_save_plot(title)
     
+
+def karger_vs_stein_runtime(dfs):
+    karger_df = dfs[KARGER].copy()
+    karger_stein_df = dfs[KARGER_STEIN].copy()
+
+    karger_df['program_time'] = karger_df['program_time'] / 1000.0  # to seconds
+    karger_stein_df['program_time'] = karger_stein_df['program_time'] / 1000.0  # to seconds
+
+    g = sns.lineplot(karger_df['nodes'], karger_df['program_time'], label=f'{KARGER} (Runtime)')
+    g = sns.lineplot(karger_stein_df['nodes'], karger_stein_df['program_time'], label=f'{KARGER_STEIN} (Runtime)')
+    g.set(xlabel='Nodi', ylabel='Tempo (s)')
+    g.set_yscale('log')
+
+    title = f'{KARGER} vs {KARGER_STEIN}'
+
+    plt.title(title)
+    show_or_save_plot(title)
+
+
+def karger_timeout_vs_stein_runtime(dfs):
+    karger_df = dfs[KARGER_TOUT].copy()
+    karger_stein_df = dfs[KARGER_STEIN].copy()
+
+    karger_df['program_time'] = karger_df['program_time'] / 1000.0  # to seconds
+    karger_stein_df['program_time'] = karger_stein_df['program_time'] / 1000.0  # to seconds
+
+    g = sns.lineplot(karger_df['nodes'], karger_df['program_time'] , label=f'{KARGER_TOUT} (Runtime)')
+    g = sns.lineplot(karger_stein_df['nodes'], karger_stein_df['program_time'], label=f'{KARGER_STEIN} (Runtime)')
+    g.set(xlabel='Nodi', ylabel='Tempo (s)')
+    # g.set_yscale('log')
+
+    title = f'{KARGER_TOUT} vs {KARGER_STEIN}'
+
+    plt.title(title)
+    show_or_save_plot(title)
 
 
 if __name__ == '__main__':
@@ -668,6 +717,8 @@ if __name__ == '__main__':
     # len(dataframes_min) == len(programs)
     dataframes_merge = merge_dataframes(dataframes)
 
+
+
     if IS_TABLE_ENABLED:
         # compare multiple programs to show potential improvements
 
@@ -678,6 +729,8 @@ if __name__ == '__main__':
         # Appendix (error): Karger vs KargerTimeout approx error
         print_comparison(dataframes_merge, [ KARGER ], ['min_cut', 'expected_min_cut', 'min_cut_error'])
         print_comparison(dataframes_merge, [ KARGER_TOUT ], ['min_cut', 'expected_min_cut', 'min_cut_error'])
+
+        print_comparison(dataframes_merge, [KARGER_STEIN], ['program_time'])
 
         # Appendix: full contraction statistics
         print_comparison(dataframes_merge, [ KARGER ], ['program_time', 'full_contraction'])
@@ -701,3 +754,7 @@ if __name__ == '__main__':
         karger_relative_error(dataframes_merge)  # all zeros!
         karger_def_vs_tout_running_time(dataframes_merge)
         karger_def_vs_tout_relative_error(dataframes_merge)
+
+        # Compare KargerMinCut with KargerSteinMinCut
+        karger_vs_stein_runtime(dataframes_merge)
+        karger_timeout_vs_stein_runtime(dataframes_merge)
