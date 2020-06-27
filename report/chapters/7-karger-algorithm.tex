@@ -72,7 +72,7 @@ size_t karger(const std::shared_ptr<AdjacencyMapGraph>& graph, size_t k) noexcep
 
 \begin{itemize}
     \item La funzione \codeinline{full\_contraction} è definita nella cartella \codeinline{Shared} perché la sua implementazione è riutilizzata anche dell'algoritmo di Karger \& Stein.
-    \item Abbiamo usato il parametro di default \codeinline{min_n} settato a 2 poter riutilizzare il codice della procedura anche per Karger \& Stein semplicemente ridefinendo il secondo parametro. Questa scelta non cambia assolutamente il funzionamento dell'algoritmo di Karger, ma aiuta a ridurre la ridondanza del codice.
+    \item Abbiamo usato il parametro di default \codeinline{min\_n} settato a 2 per poter riutilizzare il codice della procedura anche per Karger \& Stein semplicemente ridefinendo il secondo parametro. Questa scelta non cambia assolutamente il funzionamento dell'algoritmo di Karger, ma aiuta a ridurre la ridondanza del codice.
 \end{itemize}
 
 \subsection{Contrazione del grafo}
