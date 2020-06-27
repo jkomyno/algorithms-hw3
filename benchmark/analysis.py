@@ -575,13 +575,16 @@ def karger_def_vs_tout_running_time(dfs):
     karger_def_df["program"] = KARGER
     karger_tout_df["program"] = KARGER_TOUT
 
+    karger_def_df['program_time'] = karger_def_df['program_time'] / (1000 * 60)
+    karger_tout_df['program_time'] = karger_tout_df['program_time'] / (1000 * 60)
+
     # merge dataset to a single one by appending rows
     df = karger_def_df
     df = df.append(karger_tout_df)
 
     # create the barplot with `hue='program'`
     g = sns.barplot(x='nodes', y='program_time', hue='program', data=df)
-    g.set(xlabel='Nodi', ylabel='Time (ms)')
+    g.set(xlabel='Nodi', ylabel='Tempo (min)')
     
     title = f'Confronto del running time rispetto al numero di nodi per\n {KARGER} e {KARGER_TOUT}'
 
