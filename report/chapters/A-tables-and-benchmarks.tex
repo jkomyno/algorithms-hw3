@@ -6,6 +6,8 @@
 
 \emph{Nota}: tutti i tempi riportati sono in \textbf{millisecondi}.
 
+\subsubsection{Runtime e Discovery Time}
+
 \begin{table}[H]
     \centering
 
@@ -58,7 +60,7 @@
      \hline
     \end{tabular}
 
-    \caption{Runtime e discovery time per KargerMinCut}
+    \caption{Runtime e discovery time per KargerMinCut.}
     \label{table:karger-running-time}
 \end{table}
 
@@ -114,9 +116,69 @@
      \hline
     \end{tabular}
 
-    \caption{Runtime e discovery time per KargerMinCutTimeout}
+    \caption{Runtime e discovery time per KargerMinCutTimeout.}
     \label{table:kargertimeout-running-time}
 \end{table}
+
+\subsubsection{Runtime Karger \& Stein}
+
+\begin{table}[H]
+    \centering
+
+    \begin{tabular}{lrr}
+     \hline
+     \multicolumn{3}{c}{KargerSteinMinCut} \\
+     \hline
+     Istanza                    &   Nodi &       Runtime \\
+     \hline
+     input\_random\_1\_6.txt    &       6 &      2.48    \\
+     input\_random\_2\_6.txt    &       6 &     2.296    \\
+     input\_random\_3\_6.txt    &       6 &     2.346    \\
+     input\_random\_4\_6.txt    &       6 &     2.354    \\
+     input\_random\_5\_10.txt   &      10 &     5.796    \\
+     input\_random\_6\_10.txt   &      10 &      5.64    \\
+     input\_random\_7\_10.txt   &      10 &     5.745    \\
+     input\_random\_8\_10.txt   &      10 &     5.654    \\
+     input\_random\_10\_25.txt  &      25 &     54.237   \\
+     input\_random\_11\_25.txt  &      25 &     56.346   \\
+     input\_random\_12\_25.txt  &      25 &     55.524   \\
+     input\_random\_9\_25.txt   &      25 &     54.462   \\
+     input\_random\_13\_50.txt  &      50 &    235.358   \\
+     input\_random\_14\_50.txt  &      50 &    239.367   \\
+     input\_random\_15\_50.txt  &      50 &    238.642   \\
+     input\_random\_16\_50.txt  &      50 &    238.475   \\
+     input\_random\_17\_75.txt  &      75 &    633.337   \\
+     input\_random\_18\_75.txt  &      75 &    630.977   \\
+     input\_random\_19\_75.txt  &      75 &    632.557   \\
+     input\_random\_20\_75.txt  &      75 &    628.306   \\
+     input\_random\_21\_100.txt &     100 &    1456.876  \\
+     input\_random\_22\_100.txt &     100 &    1445.885  \\
+     input\_random\_23\_100.txt &     100 &    1445.962  \\
+     input\_random\_24\_100.txt &     100 &    1434.952  \\
+     input\_random\_25\_125.txt &     125 &    2635.854  \\
+     input\_random\_26\_125.txt &     125 &    2700.232  \\
+     input\_random\_27\_125.txt &     125 &    3525.056  \\
+     input\_random\_28\_125.txt &     125 &    2751.982  \\
+     input\_random\_29\_150.txt &     150 &    4404.581  \\
+     input\_random\_30\_150.txt &     150 &    4385.606  \\
+     input\_random\_31\_150.txt &     150 &    4389.538  \\
+     input\_random\_32\_150.txt &     150 &    4360.529  \\
+     input\_random\_33\_175.txt &     175 &    8217.005  \\
+     input\_random\_34\_175.txt &     175 &    8465.02   \\
+     input\_random\_35\_175.txt &     175 &   12336.052  \\
+     input\_random\_36\_175.txt &     175 &    8162.02   \\
+     input\_random\_37\_200.txt &     200 &    12639.06  \\
+     input\_random\_38\_200.txt &     200 &   12453.592  \\
+     input\_random\_39\_200.txt &     200 &   12532.446  \\
+     input\_random\_40\_200.txt &     200 &   12455.888  \\
+     \hline
+    \end{tabular}
+
+    \caption{Runtime per KargerSteinMinCut.}
+    \label{table:karger-stein-running-time}
+\end{table}
+
+\subsubsection{Tempi medi di full\_contraction}
 
 \begin{table}[H]
     \centering
@@ -170,7 +232,7 @@
      \hline
     \end{tabular}
 
-    \caption{Tempo di esecuzione full contraction per KargerMinCut}
+    \caption{Tempo medi di esecuzione di \codeinline{full\_contraction} per KargerMinCut.}
     \label{table:karger-full-contraction}
 \end{table}
 
@@ -180,7 +242,7 @@
 \begin{table}[H]
     \centering
 
-    \begin{tabular}{lrrrr}
+    \begin{tabular}{lrccc}
      \hline
      \multicolumn{5}{c}{KargerMinCut} \\
      \hline
@@ -229,14 +291,14 @@
      \hline
     \end{tabular}
 
-    \caption{Errore di approssimazione KargerMinCut}
+    \caption{Errore di approssimazione di KargerMinCut. Tutte le soluzioni ritornate sono identiche alle relative soluzioni attese.}
     \label{table:karger-approx-error}
 \end{table}
 
 \begin{table}[H]
     \centering
 
-    \begin{tabular}{lrrrr}
+    \begin{tabular}{lrccc}
      \hline
      \multicolumn{5}{c}{KargerMinCutTimeout} \\
      \hline
@@ -281,10 +343,10 @@
      input\_random\_37\_200.txt &     200 &        54 &                 54 &           0     \\
      input\_random\_38\_200.txt &     200 &        52 &                 52 &           0     \\
      input\_random\_39\_200.txt &     200 &        51 &                 51 &           0     \\
-     input\_random\_40\_200.txt &     200 &        63 &                 61 &           3.279 \\
+     input\_random\_40\_200.txt &     200 &        \cellcolor{red!25}63 &                 61 &           \cellcolor{red!25}3.279 \\
      \hline
     \end{tabular}
 
-    \caption{Errore di approssimazione KargerMinCutTimeout}
+    \caption{Errore di approssimazione di KargerMinCutTimeout. Tutte le soluzioni ritornate sono identiche alle relative soluzioni attese, ad eccezione dell'ultima istanza.}
     \label{table:kargertimeout-approx-error}
 \end{table}

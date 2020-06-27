@@ -1,6 +1,20 @@
 \section{Conclusioni}
 \label{cap:conclusions}
 
+\noindent In questa relazione abbiamo descritto gli algoritmi e relative le scelte di implementazione, tempi
+di esecuzione, l’errore di approssimazione e le strategie applicate per condividere quanto più codice possibile tra gli algoritmi implementati. \\
+
+\noindent Nella sezione \ref{cap:performance-analysis} abbiamo risposto alle 4 principali domande dell’homework, mentre nella sezione
+\ref{cap:benchmark-process} abbiamo descritto il processo di benchmark adottato, pensato per essere quanto più affidabile e
+stabile possibile. Nelle sezioni \ref{cap:problem-definition} e \ref{cap:implementation-choices}
+abbiamo invece definito il problema da affrontare, e abbiamo discusso le scelte implementative in dettaglio. Abbiamo presentato l'algoritmo di Karger nella sezione \ref{cap:algorithm-karger}. \\
+
+\noindent In sezione \ref{cap:extensions-and-originalities} abbiamo infine descritto un'estensione esplorata per soddisfare la nostra curiosità e arricchire il nostro bagaglio accademico: l'algoritmo di Karger \& Stein. Come prevedibile dalla complessità asintotica di questo algoritmo, esso si è rivelato essere nettamente più efficiente dell'algoritmo di Karger, pur mantenendo una certa semplicità implementativa. Abbiamo riportato i tempi di esecuzione di Karger \& Stein in tabella \ref{table:karger-stein-running-time}. \\
+
+\noindent Questo progetto ci ha permesso di osservare la potenza degli algoritmi randomizzati applicati al problema del Minimum Cut, dove è possibile ottenere la soluzione ottima con alta probabilità in tempi moderatamente brevi. Modificando il coefficiente di timeout usato in KargerMinCutTimeout, inoltre, è possibile regolare il tradeoff tra precisione e tempo di esecuzione per grafi con un numero anche elevato di nodi. \\
+
+\noindent Abbiamo inoltre osservato che il rapporto tra discovery time e tempo di esecuzione nel caso di KargerMinCut è di circa $0.15$, il che significa che in pratica il discovery time avviene molto prima dell'iterazione $k$ di Karger corrispondente alla probabilità di insuccesso $\frac{1}{N}$. Il valore di questo rapporto chiaramente aumenta se consideriamo esecuzioni con un timeout massimo di esecuzione, e solo in un caso (corrispondente ad un'istanza con 200 nodi) i 2 minuti di tempo non sono stati sufficienti ad individuare la soluzione esatta. \\
+
 \noindent Il progetto è disponibile anche come repository pubblica su Github:
 
 \begin{center}
