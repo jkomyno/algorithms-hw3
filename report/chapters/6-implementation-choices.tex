@@ -50,7 +50,7 @@ Il nuovo metodo \codeinline{AdjacencyMapGraph::contract} effettua la contrazione
       \codeinline{contracted} e \codeinline{incorporator} dalla Mappa di Adiacenza e da \codeinline{edge\_count\_map}.
 
     \item Trasferire ogni arco incidente in
-      \textit{contracted} su \textit{incorporator}, aggiornando anche il numero di archi corrispondenti in \codeinline{edge\_count\_map}.
+      \codeinline{contracted} su \codeinline{incorporator}, aggiornando anche il numero di archi corrispondenti in \codeinline{edge\_count\_map}.
 
     \item Eliminare dalla Mappa di Adiacenza tutti i riferimenti agli archi incidenti al vertice \codeinline{contracted} e il vertice stesso.
 \end{enumerate}

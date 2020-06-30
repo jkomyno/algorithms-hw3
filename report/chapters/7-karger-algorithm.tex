@@ -118,14 +118,11 @@ Il multigrafo risultante, denotato come $G' = G/e$, ha un vertice in meno rispet
 \subsection{Analisi probabilistica}
 \label{sub:karger-success-probability}
 
-Per analizzare la probabilità che l'algoritmo di Karger non contragga il grafo proprio contraendo i due nodi del min-cut minimo ci baseremo su questa proprietà importante:
+Per studiare la probabilità di successo per l'algoritmo di Karger ci baseremo sulla seguente proprietà:
 
-TODO: cambiare in proprietà
-\begin{defn}
+\begin{prop}
 Sia $ G = (V, E) $ un multi-grafo con $ \lvert V \rvert = n$. Se $G$ ha un min-cut di cardinalità $t$, allora $\lvert E \rvert = \dfrac{t * n}{2}$
-\end{defn}
-
-Tale proprietà non verrà dimostrata (i dettagli della dimostrazione sono riportati in classe TODO).
+\end{prop}
 
 A questo punto dobbiamo calcolare qual'è la probabilità di successo di un'esecuzione di full-contraction, ossia qual'è la probabilità che essa restituisca il taglio minimo del grafo.
 Sia $E_{i}$ la probabilità che al passo i-esimo della full-contraction la scelta casuale non seleziona un arco del min-cut:
@@ -139,22 +136,22 @@ Ora, la probabilità che ad ogni iterazione non venga scelto un lato del min-cut
 
 $$Pr(\bigcap_{i=1}^{n-2} E_{i}) \geq \prod_{i=1}^{n-2} (1 - \dfrac{2}{n-i+1}) = \dfrac{2}{n(n-1)} \geq \dfrac{2}{n^2}$$
 
-\noindent Come possiamo notare questa probabilità è abbastanza bassa. Tuttavia se consideriamo ora la probabilità dell'evento complementare, ossia la probabilità che la nostra procedura di full-contraction non restituisca il taglio minimo del grafo e rieseguiamo la provedere per k volte, essendo ogni esecuzione di indipendente, otteniamo:
-$$ Pr(\text{le k full-contraction non accumulano la taglia del min-cut}) \leq (1- \dfrac{2}{n^2})^k $$
+\noindent Come possiamo notare questa probabilità è abbastanza bassa. Tuttavia se consideriamo ora la probabilità dell'evento complementare, ossia la probabilità che la nostra procedura di full-contraction non restituisca il taglio minimo del grafo e rieseguiamo la procedura per k volte, essendo ogni esecuzione indipendente, otteniamo:
+$$ Pr(\text{le k full-contraction non accumulano la taglia del min-cut}) \leq \left( 1- \dfrac{2}{n^2} \right) ^k $$
 
-\noindent scegliendo
+\noindent scegliendo pertanto
 
 $$ k = d * \dfrac{n^2}{2} * \log{n} $$
 
 \noindent otteniamo
-$$ Pr(\text{le k full-contraction non accumulano la taglia del min-cut}) \leq (\dfrac{1}{n^d}) $$
+$$ Pr(\text{le k full-contraction non accumulano la taglia del min-cut}) \leq \left( \dfrac{1}{n^d} \right) $$
 
 \noindent infatti
 
-$$((1-\frac{2}{n^2})^{\frac{n^2}{2}} )^{\log{(n^d)}} \leq e^{-ln(n^d)} = \dfrac{1}{n^d}$$
+$$\left( \left( 1-\frac{2}{n^2} \right) ^{\frac{n^2}{2}} \right) ^{\ln {n^d}} \leq e^{-\ln n^d} = \dfrac{1}{n^d}$$
 
-\noindent che è proprio quello che volevamo per dimostrare che scelto k in questo modo, l'algoritmo di karger è corretto in alta probabilità.\\
+\noindent che è proprio quello che volevamo dimostrare, ossia scelto k in questo modo, l'algoritmo di Karger è corretto in alta probabilità.\\
 
-\noindent $d$ è una costante che permette di abbassare la probabilità di fallimento dell'algoritmo di karger, infatti più $d$ sarà alto (di conseguenza più elevato sarà k), più sarà bassa la probabilità che l'algoritmo fallisca.
+\noindent $d$ è una costante che permette di abbassare la probabilità di fallimento dell'algoritmo di Karger, infatti più $d$ sarà alto (di conseguenza più elevato sarà k), più sarà bassa la probabilità che l'algoritmo fallisca.
 
 

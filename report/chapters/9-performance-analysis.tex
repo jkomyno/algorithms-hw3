@@ -46,7 +46,7 @@ per ottenere tempi di esecuzione ragionevoli.
 \end{displayquote}
 
 \noindent Per permettere all'algoritmo di Karger un probabilità di
-fallimento pari a $\frac{1}{n}$ è necessario che $d = 1$ e di
+fallimento $ \leq \frac{1}{n}$ è necessario che $d = 1$ e di
 conseguenza ricavare $k$ con la formula vista nella sezione
 \ref{sub:karger-success-probability}. Quindi:
 $$ k = 1 * \frac{n^2}{2} * ln(n)$$
@@ -116,7 +116,7 @@ si trova il min cut e il numero di iterazioni $k$ stimato.
 \label{sec:question-4}
 
 \begin{displayquote}
-Per ognuno dei grafi del dataset, riportate il risultato risultato
+Per ognuno dei grafi del dataset, riportate il risultato
 ottenuto dalla vostra implementazione, la soluzione attesa e l'errore
 relativo calcolato come:
 
@@ -128,7 +128,7 @@ relativo calcolato come:
 
 \noindent La nostra implementazione e la scelta del numero di
 contrazioni da eseguire non introduce nessun tipo di errore per
-l'algoritmo di Karger, quindi un grafico sarebbe poco informatico.\\
+l'algoritmo di Karger, quindi un grafico sarebbe poco informativo.\\
 
 \noindent Si ritiene utile invece mostrare le differenza tra
 KargerMinCut e KargerMinCutTimeout. Il secondo
