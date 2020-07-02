@@ -275,7 +275,7 @@ def compare_n_programs(dfs_dict: Dict[str, pd.DataFrame], programs: List[str], c
 
         data = dfs_dict[program][columns]
         df = pd.concat([df, data], axis=1, sort=False)
-    
+
     # sort by nodes and then by instances
     df = df.sort_values(by=['nodes', 'filename'])
 
@@ -319,7 +319,7 @@ def pretty_print_pandas(df: pd.DataFrame, tablefmt='pretty'):
 
 def merge_dataframes_helper(dfs: List[pd.DataFrame], use_meta=True) -> pd.DataFrame:
     """
-    Create a new in-memory DataFrame that, for each row of all the dataframes in dfs, keeps only the first row 
+    Create a new in-memory DataFrame that, for each row of all the dataframes in dfs, keeps only the first row
     values merging `program_time`, `discovery_time` and `full_contraction` by mean, `discovery_iteration` by median,
     while other columns are taken arbitrarily from the first.
     :param dfs: List of DataFrames for a single program
@@ -538,13 +538,13 @@ def plot_precision_comparison(names: List[str], dfs: Dict[str, pd.DataFrame], ti
 
 def karger_full_contraction_chart(dfs):
     karger_df = dfs[KARGER].copy()
-    # karger_df['full_contraction_asymptotic'] = 0.3 * np.square(karger_df['nodes']).astype(float)
+    karger_df['full_contraction_asymptotic'] = 0.3 * np.square(karger_df['nodes']).astype(float)
     title = 'Tempo di esecuzione di full contraction rispetto al numero di nodi'
 
     g = sns.lineplot(karger_df['nodes'], karger_df['full_contraction'], label='Full Contraction')
-    # g = sns.lineplot(karger_df['nodes'], karger_df['full_contraction_asymptotic'], label='Full Contraction Asintotico: n^2')
+    g = sns.lineplot(karger_df['nodes'], karger_df['full_contraction_asymptotic'], label='Full Contraction Asintotico: n^2')
     g.set(xlabel='Nodi', ylabel='Tempo (μs)')
-    # g.set_xlim(6, 200)
+    g.set_xlim(6, 200)
     # g.set_yscale('log')
 
     plt.title(title)
@@ -557,7 +557,7 @@ def karger_discovery_vs_program_time_chart(dfs):
 
     karger_df['program_time'] = karger_df['program_time'] / 1000.0  # to seconds
     karger_df['discovery_time'] = karger_df['discovery_time'] / 1000.0  # to seconds
-    
+
     g = sns.lineplot(karger_df['nodes'], karger_df['discovery_time'], label=f'{KARGER} (Discovery Time)')
     g = sns.lineplot(karger_df['nodes'], karger_df['program_time'], label=f'{KARGER} (Runtime)')
     g.set(xlabel='Nodi', ylabel='Tempo (s)')
@@ -570,10 +570,10 @@ def karger_discovery_vs_program_time_chart(dfs):
 def karger_relative_error(dfs):
     karger_df = dfs[KARGER].copy()
     title = f'Errore relativo dell\'output rispetto al numero di nodi'
-    
+
     g = sns.barplot(karger_df['nodes'], karger_df['min_cut_error'], label=f'${KARGER} (Errore Relativo)')
     g.set(xlabel='Nodi', ylabel='Errore (%)')
-    
+
     plt.title(title)
     show_or_save_plot(title)
 
@@ -582,7 +582,7 @@ def karger_def_vs_tout_running_time(dfs):
     # create copy to avoid side effect
     karger_def_df = dfs[KARGER].copy()
     karger_tout_df = dfs[KARGER_TOUT].copy()
-    
+
     # add a column program that represents the program name
     karger_def_df["program"] = KARGER
     karger_tout_df["program"] = KARGER_TOUT
@@ -599,7 +599,7 @@ def karger_def_vs_tout_running_time(dfs):
     # create the barplot with `hue='program'`
     g = sns.barplot(x='nodes', y='program_time', hue='program', data=df)
     g.set(xlabel='Nodi', ylabel='Tempo (min)')
-    
+
     title = f'Confronto del running time rispetto al numero di nodi per\n {KARGER} e {KARGER_TOUT}'
 
     plt.title(title)
@@ -610,7 +610,7 @@ def karger_def_vs_tout_relative_error(dfs):
     # create copy to avoid side effect
     karger_def_df = dfs[KARGER].copy()
     karger_tout_df = dfs[KARGER_TOUT].copy()
-    
+
     # add a column program that represents the program name
     karger_def_df["program"] = KARGER
     karger_tout_df["program"] = KARGER_TOUT
@@ -622,7 +622,7 @@ def karger_def_vs_tout_relative_error(dfs):
     # create the barplot with `hue='program'`
     g = sns.barplot(x='nodes', y='min_cut_error', hue='program', data=df)
     g.set(xlabel='Nodi', ylabel='Errore (%)')
-    
+
     title = f'Confronto dell\'errore relativo rispetto al numero di nodi per\n {KARGER} e {KARGER_TOUT}'
 
     plt.title(title)
@@ -663,7 +663,7 @@ def karger_runtime(dfs):
 
     plt.title(title)
     show_or_save_plot(title)
-    
+
 
 def karger_vs_stein_runtime(dfs):
     karger_df = dfs[KARGER].copy()
@@ -725,7 +725,7 @@ if __name__ == '__main__':
         # Appendix (runtime): Karger vs KargerTimeout running time (program vs discovery time)
         print_comparison(dataframes_merge, [ KARGER ], ['discovery_time', 'program_time'])
         print_comparison(dataframes_merge, [ KARGER_TOUT ], ['discovery_time', 'program_time'])
-        
+
         # Appendix (error): Karger vs KargerTimeout approx error
         print_comparison(dataframes_merge, [ KARGER ], ['min_cut', 'expected_min_cut', 'min_cut_error'])
         print_comparison(dataframes_merge, [ KARGER_TOUT ], ['min_cut', 'expected_min_cut', 'min_cut_error'])
@@ -749,7 +749,7 @@ if __name__ == '__main__':
         # Q3: For each dataset compare discovery time with algorithm runtime.
         karger_discovery_vs_program_time_chart(dataframes_merge)
         karger_discovery_iter_vs_estimated(dataframes_merge)
-        
+
         # Q4: Output, Expected, Relative Error
         karger_relative_error(dataframes_merge)  # all zeros!
         karger_def_vs_tout_running_time(dataframes_merge)
