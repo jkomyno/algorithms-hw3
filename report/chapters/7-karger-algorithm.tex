@@ -68,12 +68,20 @@ size_t karger(const std::shared_ptr<AdjacencyMapGraph>& graph, size_t k) noexcep
 
 \noindent L'algoritmo di Karger è stato implementato a partire dallo pseudocodice visto a lezione. \\
 
-\subsubsection{Osservazioni}
+\begin{obser}
+La taglia del minimum cut in $ G/e $ è almeno grande quanto il minimum cut in $ G $  (fintantoché $ G/e $ ha almeno un arco). Infatti ogni taglio in $ G/e $ ha un taglio corrispondente della stessa cardinalità in $ G $.
+\end{obser}
 
-\begin{itemize}
-    \item La funzione \codeinline{full\_contraction} è definita nella cartella \codeinline{Shared} perché la sua implementazione è riutilizzata anche dell'algoritmo di Karger \& Stein.
-    \item Abbiamo usato il parametro di default \codeinline{min\_n} settato a 2 per poter riutilizzare il codice della procedura anche per Karger \& Stein semplicemente ridefinendo il secondo parametro. Questa scelta non cambia assolutamente il funzionamento dell'algoritmo di Karger, ma aiuta a ridurre la ridondanza del codice.
-\end{itemize}
+\begin{obser}
+Sia $ e_1,...e_{n-2} $ una sequenza di archi in $ G $, tale che nessuno di loro sia compreso nel minimo in cut, e tale che $ G'=G/{ e_1,...e_{n-2}} $ sia un singolo multi-arco. Questo multi-arco corrisponde al minimum cut in $ G $.
+\end{obser}
+
+\begin{obser}
+L'algoritmo ritorna sempre un taglio, e il tale taglio è non minore del minimum cut.
+\end{obser}
+
+\vspace{10pt}
+\noindent Si noti inoltre che la funzione \codeinline{full\_contraction} è definita nella cartella \codeinline{Shared} perché la sua implementazione è riutilizzata anche dell'algoritmo di Karger \& Stein. Abbiamo usato il parametro di default \codeinline{min\_n} settato a 2 per poter riutilizzare il codice della procedura anche per Karger \& Stein semplicemente ridefinendo il secondo parametro. Questa scelta non cambia assolutamente il funzionamento dell'algoritmo di Karger, ma aiuta a ridurre la ridondanza del codice.
 
 \subsection{Contrazione del grafo}
 \label{sub:karger-contraction}

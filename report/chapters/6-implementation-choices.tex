@@ -84,6 +84,10 @@ void AdjacencyMapGraph::contract(size_t contracted, size_t incorporator) {
 
 Si noti che il multigrafo risultante dalla contrazione è sempre privo di \textit{self-loop}.
 
+\begin{obser}
+Rispetto alla versione dell'algoritmo vista in classe, invece di eliminare i due vertici estremi all'arco contratto e creare un terzo vertice che rappresenti i primi due, abbiamo optato per eliminare un solo vertice e trasferirne i lati rimantenti al secondo vertice. Il risultato finale e gli altri step dell'algoritom di Karger sono equivalenti, ma il codice dell'implementazione risulta essere più snello e più chiaro.
+\end{obser}
+
 \paragraph{Selezione di arco in modo casuale}
 
 \codeinline{AdjacencyMapGraph::get\_random\_edge} è un ulteriore metodo aggiunto alla Matrice di Adiacenza, ed è utile a scegliere casualmente due vertici distinti da contrarre. Esso estrae in maniera casuale un arco da \codeinline{edge\_count\_map}.
@@ -189,6 +193,8 @@ ulteriori commenti esplicativi.
 %Tutte le strutture dati elencate di seguito sono definite nella cartella \textit{Shared}.
 %Ove possibile, per la nomenclatura dei metodi abbiamo cercato di seguire lo stesso standard dei container STL di C++.
 %Inoltre, le strutture dati usate sono sempre pre-allocate in memoria quando possibile, evitando rehashing e riallocazioni dispendiose. Questo significa che la maggior parte delle operazioni indicate con \complexityConstant{} ammortizzato siano in realtà totalmente costanti nella pratica. \\
+
+\newpage
 
 \subsection{Copia del grafo}
 \label{sub:graph-copy}

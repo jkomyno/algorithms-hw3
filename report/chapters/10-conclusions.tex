@@ -2,7 +2,7 @@
 \label{cap:conclusions}
 
 \noindent In questa relazione abbiamo descritto gli algoritmi e relative le scelte di implementazione, tempi
-di esecuzione, l’errore di approssimazione e le strategie applicate per condividere quanto più codice possibile tra gli algoritmi implementati. \\
+di esecuzione, gli errori di approssimazione e le strategie applicate per condividere quanto più codice possibile tra gli algoritmi implementati. \\
 
 \noindent Nella sezione \ref{cap:performance-analysis} abbiamo risposto alle 4 principali domande dell’homework, mentre nella sezione
 \ref{cap:benchmark-process} abbiamo descritto il processo di benchmark adottato, pensato per essere quanto più affidabile e
@@ -14,6 +14,8 @@ abbiamo invece definito il problema da affrontare, e abbiamo discusso le scelte 
 \noindent Questo progetto ci ha permesso di osservare la potenza degli algoritmi randomizzati applicati al problema del Minimum Cut, dove è possibile ottenere la soluzione ottima con alta probabilità in tempi moderatamente brevi. Modificando il coefficiente di timeout usato in KargerMinCutTimeout, inoltre, è possibile regolare il tradeoff tra precisione e tempo di esecuzione per grafi con un numero anche elevato di nodi. \\
 
 \noindent Abbiamo inoltre osservato che il rapporto tra discovery time e tempo di esecuzione nel caso di KargerMinCut è di circa $0.15$, il che significa che in pratica il discovery time avviene molto prima dell'iterazione $k$ di Karger corrispondente alla probabilità di insuccesso $\frac{1}{N}$. Il valore di questo rapporto chiaramente aumenta se consideriamo esecuzioni con un timeout massimo di esecuzione, e solo in un caso (corrispondente ad un'istanza con 200 nodi) i 2 minuti di tempo non sono stati sufficienti ad individuare la soluzione esatta. \\
+
+\noindent Infine, siamo certi che questi tre homework ci hanno permesso di capire molto più a fondo come funzionano gli algoritmi fondamentali visti a lezione, e hanno sicuramente migliorato le nostre abilità di misurazione dei dati e resoconto del lavoro di gruppo svolto. \\
 
 \noindent Il progetto è disponibile anche come repository pubblica su Github:
 

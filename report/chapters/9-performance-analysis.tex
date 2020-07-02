@@ -13,18 +13,18 @@ misurati con la complessità asintotica di
 \codeinline{full\_contraction}.
 \end{displayquote}
 
-\noindent Il grafico \ref{fig:karger-full-contraction-chart} mostra la
+\noindent La figura \ref{fig:karger-full-contraction-chart} mostra la
 variazione dei tempi di calcolo al variare del numero dei vertici del
 grafo ed evidenzia la differenza del tempo di esecuzione pratico di
 \codeinline{full\_contraction} rispetto a quello asintotico. È possibile vedere che nella pratica \codeinline{full\_contraction} cresce un po' meno che quadraticamente rispetto al numero di nodi. La tabella \ref{table:karger-full-contraction} mostra invece
 un dettaglio di quanto illustrato dal grafico.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
 
     \includegraphics[width=0.9\textwidth]{./images/Tempo_di_esecuzione_di_full_contraction_rispetto_al_numero_di_nodi.png}
 
-    \caption{Confronto tra il tempo di esecuzione di \codeinline{full\_contraction} (in microsecondi) e la sua complessità asintotica rispetto al numero di nodi.}
+    \caption{Confronto tra il tempo di esecuzione di \codeinline{full\_contraction} (in millisecondi) e la sua complessità asintotica rispetto al numero di nodi.}
     \label{fig:karger-full-contraction-chart}
 \end{figure}
 
@@ -51,10 +51,10 @@ conseguenza ricavare $k$ con la formula vista nella sezione
 \ref{sub:karger-success-probability}. Quindi:
 $$ k = 1 * \frac{n^2}{2} * ln(n)$$
 
-\noindent Il grafico \ref{fig:karger-runtime-chart} mostra il tempo di
-esecuzione (in millisecondi) dell'algoritmo di Karger e lo confronta con il tempo asintotico rispetto al numero di nodi. Anche in questo caso, possiamo notare che la curva teorica e la curva del tempo di esecuzione effettiva sono piuttosto simili, a meno di oscillazioni osservabili soprattutto nei grafi col minor numero di nodi.
+\noindent La figura \ref{fig:karger-runtime-chart} mostra il tempo di
+esecuzione (in millisecondi) dell'algoritmo di Karger e lo confronta con il tempo asintotico rispetto al numero di nodi.In questo caso, possiamo notare che la curva teorica e la curva del tempo di esecuzione effettiva sono molto simili, a meno di leggere oscillazioni osservabili soprattutto nei grafi col minor numero di nodi.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
 
     \includegraphics[width=0.9\textwidth]{./images/Tempo_di_esecuzione_attuale_e_asintotico__rispetto_al_numero_di_nodi_per_KargerMinCut.png}
@@ -74,7 +74,7 @@ Confrontate il discovery time con il tempo di esecuzione complessivo
 per ognuno dei grafi nel dataset.
 \end{displayquote}
 
-\noindent Il grafico \ref{fig:karger-discovery-vs-program-time-chart}
+\noindent La figura \ref{fig:karger-discovery-vs-program-time-chart}
 mostra un confronto per il \emph{runtime}, ovvero il tempo totale di
 esecuzione dell'algoritmo e \emph{discovery time}, ovvero il tempo in
 cui l'algoritmo trova il taglio di costo minimo per la prima volta.
@@ -88,9 +88,9 @@ i risultati hanno molta varianza, ma in linea generale essa è almeno un ordine 
 \noindent Ovviamente, come ci si può aspettare, la curva
 \emph{discovery time} è considerevolmente più bassa rispetto all'altra
 in quanto, data la scelta randomica, ``la volta fortunata'' potrebbe
-capitare anche prima della fine dell'algorimto, e anzi, spesso è così.
+capitare anche prima della fine dell'algoritmo, e anzi, spesso è così.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
 
     \includegraphics[width=0.9\textwidth]{./images/Confronto_tra_discovery_time_e_runtime_rispetto_al_numero_di_nodi.png}
@@ -99,7 +99,7 @@ capitare anche prima della fine dell'algorimto, e anzi, spesso è così.
     \label{fig:karger-discovery-vs-program-time-chart}
 \end{figure}
 
-\noindent Il grafico \ref{fig:karger-discovery-vs-estimated-k-chart} invece
+\noindent La figura \ref{fig:karger-discovery-vs-estimated-k-chart} invece
 illustra una comparativa tra il numero di iterazioni tramite le quali
 si trova il min cut e il numero di iterazioni $k$ stimato.
 
