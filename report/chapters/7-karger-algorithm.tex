@@ -68,18 +68,6 @@ size_t karger(const std::shared_ptr<AdjacencyMapGraph>& graph, size_t k) noexcep
 
 \noindent L'algoritmo di Karger è stato implementato a partire dallo pseudocodice visto a lezione. \\
 
-\begin{obser}
-La taglia del minimum cut in $ G/e $ è almeno grande quanto il minimum cut in $ G $  (fintantoché $ G/e $ ha almeno un arco). Infatti ogni taglio in $ G/e $ ha un taglio corrispondente della stessa cardinalità in $ G $.
-\end{obser}
-
-\begin{obser}
-Sia $ e_1,...e_{n-2} $ una sequenza di archi in $ G $, tale che nessuno di loro sia compreso nel minimo in cut, e tale che $ G'=G/{ e_1,...e_{n-2}} $ sia un singolo multi-arco. Questo multi-arco corrisponde al minimum cut in $ G $.
-\end{obser}
-
-\begin{obser}
-L'algoritmo ritorna sempre un taglio, e il tale taglio è non minore del minimum cut.
-\end{obser}
-
 \vspace{10pt}
 \noindent Si noti inoltre che la funzione \codeinline{full\_contraction} è definita nella cartella \codeinline{Shared} perché la sua implementazione è riutilizzata anche dell'algoritmo di Karger \& Stein. Abbiamo usato il parametro di default \codeinline{min\_n} settato a 2 per poter riutilizzare il codice della procedura anche per Karger \& Stein semplicemente ridefinendo il secondo parametro. Questa scelta non cambia assolutamente il funzionamento dell'algoritmo di Karger, ma aiuta a ridurre la ridondanza del codice.
 
@@ -93,7 +81,21 @@ In un grafo $ G $, la \textbf{contrazione} di un lato $e$ con estremi $u, v$ è 
 Il multigrafo risultante, denotato come $G' = G/e$, ha un vertice in meno rispetto a $G$. Il numero di lati diminuisce di un fattore pari alla molteplicità del lato contratto.
 \end{defn}
 
-\noindent Si veda ad esempio la figura \ref{fig:contraction-example}.
+\noindent Si veda ad esempio la figura \ref{fig:contraction-example}.\\
+
+\noindent Utili sono anche le seguenti osservazioni che riportiamo qui di seguito per garantire la correttezza di tale algoritmo.
+
+\begin{obser}
+La taglia del minimum cut in $ G/e $ è almeno grande quanto il minimum cut in $ G $  (fintantoché $ G/e $ ha almeno un arco). Infatti ogni taglio in $ G/e $ ha un taglio corrispondente della stessa cardinalità in $ G $.
+\end{obser}
+
+\begin{obser}
+Sia $ e_1,...,e_{n-2} $ una sequenza di archi in $ G $, tale che nessuno di loro sia compreso nel minimo in cut, e tale che $ G'=G/{ e_1,...,e_{n-2}} $ sia un singolo multi-arco. Questo multi-arco corrisponde al minimum cut in $ G $.
+\end{obser}
+
+\begin{obser}
+L'algoritmo ritorna sempre un taglio, e tale taglio non è minore del minimum cut.
+\end{obser}
 
 
 

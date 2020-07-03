@@ -85,7 +85,7 @@ void AdjacencyMapGraph::contract(size_t contracted, size_t incorporator) {
 Si noti che il multigrafo risultante dalla contrazione è sempre privo di \textit{self-loop}.
 
 \begin{obser}
-Rispetto alla versione dell'algoritmo vista in classe, invece di eliminare i due vertici estremi all'arco contratto e creare un terzo vertice che rappresenti i primi due, abbiamo optato per eliminare un solo vertice e trasferirne i lati rimantenti al secondo vertice. Il risultato finale e gli altri step dell'algoritom di Karger sono equivalenti, ma il codice dell'implementazione risulta essere più snello e più chiaro.
+Rispetto alla versione dell'algoritmo vista in classe, invece di eliminare i due vertici estremi all'arco contratto e creare un terzo vertice che rappresenti i primi due, abbiamo optato per eliminare un solo vertice e trasferirne i lati rimanenti al secondo vertice. Il risultato finale e gli altri step dell'algoritmo di Karger sono equivalenti, ma il codice dell'implementazione risulta essere più snello e più chiaro.
 \end{obser}
 
 \paragraph{Selezione di arco in modo casuale}
@@ -120,7 +120,7 @@ const Edge AdjacencyMapGraph::get_random_edge() const noexcept {
 
 \noindent Il file \codeinline{main.cpp} ha la stessa struttura per
 ogni algoritmo implementato, come riportato nel listato \ref{listing:main-cpp}.
-L'input di ogni programma è un file contentente una lista di
+L'input di ogni programma è un file contenente una lista di
 adiacenza, dove, per ogni riga:
 
 \begin{itemize}
@@ -184,7 +184,7 @@ int main(int argc, char** argv) {
 \label{listing:main-cpp}
 \end{listing}
 
-\noindent Tutti i file citati precedentemento sono locati nella
+\noindent Tutti i file citati precedentemente sono locati nella
 cartella \textit{Shared} del progetto consegnato e sono corredati di
 ulteriori commenti esplicativi.
 
@@ -203,7 +203,7 @@ ulteriori commenti esplicativi.
 
 \noindent Abbiamo optato per passare come argomento a \codeinline{full\_contraction} un riferimento costante al grafo originale incapsulato in un puntatore condiviso (\mintinline{c++}{std::shared_ptr}), e abbiamo scelto di creare una nuova copia di esso incapsulata in un \mintinline{c++}{std::unique_ptr}. sono due \textit{smart pointers} diversi che permettono di usare puntatori in maniera \textit{safe}, senza alcun rischio di memory leak. \\
 
-\noindent Grazie a \mintinline{c++}{std::shared_ptr} è possibile passare il grafo originale come argomento ad altre sottoprocedure mantenendo l'ownership del puntatore alla procedura chiamante. L'oggetto viene quindi deallocato della memoria Heap solo il \codeinline{main} del programma termina. \mintinline{c++}{std::unique_ptr} è invece usato per disfarsi del grafo contratto ritornato da \codeinline{full\_contraction} al termine di ogni iterazione dell'algoritmo di Karger.
+\noindent Grazie a \mintinline{c++}{std::shared_ptr} è possibile passare il grafo originale come argomento ad altre sotto-procedure mantenendo l'ownership del puntatore alla procedura chiamante. L'oggetto viene quindi deallocato della memoria Heap solo il \codeinline{main} del programma termina. \mintinline{c++}{std::unique_ptr} è invece usato per disfarsi del grafo contratto ritornato da \codeinline{full\_contraction} al termine di ogni iterazione dell'algoritmo di Karger.
 
 \begin{listing}[!ht]
 \begin{minted}{c++}
