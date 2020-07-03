@@ -52,7 +52,7 @@ conseguenza ricavare $k$ con la formula vista nella sezione
 $$ k = 1 * \frac{n^2}{2} * ln(n)$$
 
 \noindent La figura \ref{fig:karger-runtime-chart} mostra il tempo di
-esecuzione (in millisecondi) dell'algoritmo di Karger e lo confronta con il tempo asintotico rispetto al numero di nodi.In questo caso, possiamo notare che la curva teorica e la curva del tempo di esecuzione effettiva sono molto simili, a meno di leggere oscillazioni osservabili soprattutto nei grafi col minor numero di nodi.
+esecuzione (in millisecondi) dell'algoritmo di Karger e lo confronta con il tempo asintotico rispetto al numero di nodi. In questo caso, possiamo notare che la curva teorica e la curva del tempo di esecuzione effettiva sono molto simili, a meno di leggere oscillazioni osservabili soprattutto nei grafi col minor numero di nodi.
 
 \begin{figure}[ht]
     \centering
@@ -101,7 +101,7 @@ capitare anche prima della fine dell'algoritmo, e anzi, spesso è così.
 
 \noindent La figura \ref{fig:karger-discovery-vs-estimated-k-chart} invece
 illustra una comparativa tra il numero di iterazioni tramite le quali
-si trova il min cut e il numero di iterazioni $k$ stimato.
+si trova il min-cut e il numero di iterazioni $k$ stimato.
 
 \begin{figure}[!ht]
     \centering
@@ -144,7 +144,7 @@ KargerMinCutTimeout riesce con successo ad ottenere zero errore anche
 prima dello scadere del timeout. Ciò implica che con
 KargerMinCutTimeout potrebbe essere utilizzato per avere una soluzione
 approssimata entro un tempo accettabile. Quanto descritto è mostrato
-nel grafico \ref{fig:karger-vs-kargertout-runtime-chart}.
+in figura \ref{fig:karger-vs-kargertout-runtime-chart}.
 
 \begin{figure}[H]
     \centering

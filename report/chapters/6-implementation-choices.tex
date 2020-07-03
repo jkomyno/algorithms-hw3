@@ -5,7 +5,7 @@
 \label{sub:graph-representation}
 
 Gli algoritmi di questo homework operano su grafi non pesati,
- non diretti e connessi. I grafi letti in input sono considerati grafici semplici, ma essi possono diventare multigrafi a seguito dell'invocazione del metodo \codeinline{contract}, definito nel paragrafo "Contrazione di due nodi" della sezione \ref{par:contraction}. \\
+ non diretti e connessi. I grafi letti in input sono considerati grafi semplici, ma essi possono diventare multigrafi a seguito dell'invocazione del metodo \codeinline{contract}, definito nel paragrafo "Contrazione di due nodi" della sezione \ref{par:contraction}. \\
 
 % \noindent Come nel precedente homework, per semplificare la logica di indicizzazione dei nodi del grafo, la label dei nodi (originariamente numerata da $1$ a $n$) è decrementata di 1, quindi i nodi sono rappresentati dall'intervallo numerico $[0, n-1]$.
 
@@ -41,7 +41,7 @@ struct edge_hash {
 \paragraph{Contrazione di due nodi}
 \label{par:contraction}
 
-Il nuovo metodo \codeinline{AdjacencyMapGraph::contract} effettua la contrazione di due vertici, chiamati \codeinline{contracted} e \codeinline{incorporator}. Come suggeriscono i nomi usati per identificare le variabili, \codeinline{contracted} indica il nodo da contrarre, mentre \codeinline{incorporator} è il vertice che deve acquisire gli archi incidenti al nodo contratto. \\
+Il nuovo metodo \codeinline{AdjacencyMapGraph::contract} effettua la contrazione di due vertici, chiamati \codeinline{contracted} e \codeinline{incorporator}. Come suggeriscono i nomi usati per identificare le variabili, \codeinline{contracted} indica il nodo da contrarre, mentre \codeinline{incorporator} è il nodo che deve acquisire gli archi incidenti al nodo contratto. \\
 
 \noindent Gli step eseguiti dalla procedura \codeinline{contract}, la cui implementazione è riportata nel listato \ref{listing:met-contract}, sono i seguenti:
 

@@ -8,9 +8,9 @@
 
 \begin{enumerate}
     \item \textbf{Step 1}: La variabile \codeinline{min\_cut} viene inizializzata a $+\infty$;
-    \item \textbf{Step 2}: Per $k$ iterazioni, viene eseguita la funzione \codeinline{full\_contraction};
-    \item \textbf{Step 3}: Se il numero di lati del grafo ritornato da \codeinline{full\_contraction} è minore di \codeinline{min\_cut}, allora \codeinline{min\_cut} viene aggiornato a tale valore;
-    \item \textbf{Step 4}: L'operazione viene ripetuta finché il grafo contiene solo 2 nodi.
+    \item \textbf{Step 2}: Per $k$ iterazioni, eseguire la funzione \codeinline{full\_contraction};
+    \item \textbf{Step 3}: Se il numero di lati del grafo ritornato da \codeinline{full\_contraction} è minore di \codeinline{min\_cut}, allora \codeinline{min\_cut} aggiornare tale valore;
+    \item \textbf{Step 4}: Restituiamo il risultato migliore ottenuto nelle k iterazioni.
 \end{enumerate}
 
 \noindent La funzione \codeinline{full\_contraction} prende in input un grafo connesso, non diretto, non pesato, ed è definita come segue:
@@ -69,7 +69,7 @@ size_t karger(const std::shared_ptr<AdjacencyMapGraph>& graph, size_t k) noexcep
 \noindent L'algoritmo di Karger è stato implementato a partire dallo pseudocodice visto a lezione. \\
 
 \vspace{10pt}
-\noindent Si noti inoltre che la funzione \codeinline{full\_contraction} è definita nella cartella \codeinline{Shared} perché la sua implementazione è riutilizzata anche dell'algoritmo di Karger \& Stein. Abbiamo usato il parametro di default \codeinline{min\_n} settato a 2 per poter riutilizzare il codice della procedura anche per Karger \& Stein semplicemente ridefinendo il secondo parametro. Questa scelta non cambia assolutamente il funzionamento dell'algoritmo di Karger, ma aiuta a ridurre la ridondanza del codice.
+\noindent Si noti inoltre che la funzione \codeinline{full\_contraction} è definita nella cartella \codeinline{Shared} perché la sua implementazione è riutilizzata anche dell'algoritmo di Karger \& Stein. Abbiamo usato il parametro di default \codeinline{min\_n} (che rappresenta il numero di nodi che vengono lasciati nel grafo finale contratto) settato a 2 per poter riutilizzare il codice della procedura anche per Karger \& Stein semplicemente ridefinendo il secondo parametro. Questa scelta non cambia assolutamente il funzionamento dell'algoritmo di Karger, ma aiuta a ridurre la ridondanza del codice.
 
 \subsection{Contrazione del grafo}
 \label{sub:karger-contraction}
@@ -77,7 +77,7 @@ size_t karger(const std::shared_ptr<AdjacencyMapGraph>& graph, size_t k) noexcep
 L'idea alla base dell'algoritmo di Karger è la contrazione di un lato.
 
 \begin{defn}
-In un grafo $ G $, la \textbf{contrazione} di un lato $e$ con estremi $u, v$ è la sostituzione di $ u $ e $ v $ con un unico vertice i cui lati incidenti sono i lati diversi da $ e $ che erano incidenti nei vertici $ u $ o $ v $.
+In un grafo $ G $, la \textbf{contrazione} di un lato $e = (u,v)$ è la sostituzione di $ u $ e $ v $ con un unico vertice i cui lati incidenti sono i lati diversi da $ e $ che erano incidenti nei vertici $ u $ o $ v $.
 Il multigrafo risultante, denotato come $G' = G/e$, ha un vertice in meno rispetto a $G$. Il numero di lati diminuisce di un fattore pari alla molteplicità del lato contratto.
 \end{defn}
 
@@ -90,7 +90,7 @@ La taglia del minimum cut in $ G/e $ è almeno grande quanto il minimum cut in $
 \end{obser}
 
 \begin{obser}
-Sia $ e_1,...,e_{n-2} $ una sequenza di archi in $ G $, tale che nessuno di loro sia compreso nel minimo in cut, e tale che $ G'=G/{ e_1,...,e_{n-2}} $ sia un singolo multi-arco. Questo multi-arco corrisponde al minimum cut in $ G $.
+Sia $ e_1,...,e_{n-2} $ una sequenza di archi in $ G $, tale che nessuno di loro sia compreso nel minimo in cut, e tale che $ G'=G/{ e_1,...,e_{n-2}} $ sia un multigrafo con due soli nodi e un singolo multi-arco. Questo multi-arco corrisponde al minimum cut in $ G $.
 \end{obser}
 
 \begin{obser}
