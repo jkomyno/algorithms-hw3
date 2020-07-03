@@ -69,8 +69,8 @@ jobs:
       before_deploy:
         # prepare release folder
         - exes=(*.out)
-        - args=("benchmark" "KargerMinCut" "Shared" "dataset" "README.md"
-                "Makefile" "HW3.sln" "${csvs[@]}" "${exes[@]}")
+        - args=("benchmark" "KargerMinCut" "KargerMinCutTimeout" "KargerSteinMinCut" "Shared" "dataset" "README.md"
+                "Makefile" "process.py" "HW3.sln" "${csvs[@]}" "${exes[@]}")
         - tar -czf ./algorithms-hw3.tar.gz "${args[@]}"
         - export DEPLOY_PACKAGE=./algorithms-hw3.tar.gz
         - echo "DEPLOY_PACKAGE is ${DEPLOY_PACKAGE}"
